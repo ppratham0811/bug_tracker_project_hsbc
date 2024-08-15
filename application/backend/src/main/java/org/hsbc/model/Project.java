@@ -3,17 +3,25 @@ package org.hsbc.model;
 import org.hsbc.model.enums.ProjectOrBugStatus;
 
 import java.time.LocalDate;
+import java.time.LocalDate;
 
 public class Project {
     private String projectName;
     private ProjectOrBugStatus projectStatus;
-    private String projectManager;
+    private int projectManager;
     private LocalDate startDate;
     private int noOfBugs;
 
-    public Project() {}
+    public Project() {
+    }
 
-    public Project(String projectName, ProjectOrBugStatus projectStatus, String projectManager, LocalDate startDate) {
+    public Project(String projectName, int projectManager, LocalDate startDate) {
+        this.projectName = projectName;
+        this.projectManager = projectManager;
+        this.startDate = startDate;
+    }
+
+    public Project(String projectName, int projectManager, LocalDate startDate, ProjectOrBugStatus projectStatus) {
         this.projectName = projectName;
         this.projectStatus = projectStatus;
         this.projectManager = projectManager;
@@ -36,19 +44,19 @@ public class Project {
         this.projectStatus = projectStatus;
     }
 
-    public String getProjectManager() {
+    public int getProjectManager() {
         return projectManager;
     }
 
-    public void setProjectManager(String projectManager) {
+    public void setProjectManager(int projectManager) {
         this.projectManager = projectManager;
     }
 
-    public LocalDate getStart_date() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStart_date(LocalDate start_date) {
+    public void setStartDate(LocalDate start_date) {
         this.startDate = start_date;
     }
 

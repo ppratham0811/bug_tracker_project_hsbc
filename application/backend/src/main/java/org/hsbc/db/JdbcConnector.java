@@ -40,14 +40,14 @@ public class JdbcConnector {
         password = dbPassword;
     }
 
-//    public static JdbcConnector getInstance() {
-//        if (instance == null) {
-//            return new JdbcConnector();
-//        }
-//        return instance;
-//    }
+    public static JdbcConnector getInstance() {
+        if (instance == null) {
+            return new JdbcConnector();
+        }
+        return instance;
+    }
 
-    public static Connection getConnectionObject() throws SQLException {
+    public Connection getConnectionObject() throws SQLException {
         return DriverManager.getConnection(url, username, password);
     }
 
