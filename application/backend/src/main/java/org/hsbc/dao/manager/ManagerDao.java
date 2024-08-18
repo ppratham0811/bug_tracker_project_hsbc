@@ -1,5 +1,5 @@
 package org.hsbc.dao.manager;
-
+//gd
 import org.hsbc.db.JdbcConnector;
 import org.hsbc.exceptions.ProjectLimitExceededException;
 import org.hsbc.exceptions.WrongProjectDateException;
