@@ -16,7 +16,7 @@ CREATE TABLE users(
     last_logged_in DATETIME
 ) AUTO_INCREMENT = 100001;
 
-INSERT INTO users(username, user_password, user_role) VALUES ("ppratham0811", "ppratham0811", "MANAGER");
+INSERT INTO users(username, user_password, user_role) VALUES ("prathmesh", "root", "MANAGER");
 
 SELECT * FROM users;
 
