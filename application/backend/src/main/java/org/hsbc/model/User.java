@@ -15,8 +15,10 @@ public class User {
 
     private String username, fullName, userPassword, userEmail;
     private UserRole userRole;
-    private int projectCount;
+    private int projectCount, userId;
     private LocalDate lastLoggedIn;
+    private static int firstUserId = 100000;
+
 
     public User () {}
 
@@ -24,7 +26,13 @@ public class User {
         this.username = username;
         this.userPassword = userPassword;
         this.userRole = userRole;
+        userId = ++firstUserId;
     }
+
+    public int getUserId() {
+        return userId;
+    }
+
 
     public String getUsername() {
         return username;
