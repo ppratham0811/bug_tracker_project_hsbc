@@ -15,15 +15,24 @@ public class User {
 
     private String username, fullName, userPassword, userEmail;
     private UserRole userRole;
-    private int projectCount;
+    private int projectCount, userId;
     private LocalDate lastLoggedIn;
 
     public User () {}
 
-    public User(String username, String userPassword, UserRole userRole) {
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public User(String username, String userPassword, UserRole userRole, int userId) {
         this.username = username;
         this.userPassword = userPassword;
         this.userRole = userRole;
+        this.userId = userId;
     }
 
     public String getUsername() {
