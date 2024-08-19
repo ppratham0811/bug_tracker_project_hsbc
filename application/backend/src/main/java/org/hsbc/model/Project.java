@@ -6,6 +6,10 @@ import java.time.LocalDate;
 import java.time.LocalDate;
 
 public class Project {
+    static {
+        int projectId = 101;
+    }
+
     private String projectName;
     private ProjectOrBugStatus projectStatus;
     private int projectManager;

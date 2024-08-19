@@ -130,12 +130,10 @@ public class TesterDao implements TesterDaoInterface{
 
 
             bugQueryPS.setInt(1, userId);
-            bugQueryPS.setInt(2, )
+            bugQueryPS.setInt(2, userId);
             ResultSet rs = bugQueryPS.executeQuery();
-
+    
             while (rs.next()) {
-                int userId = rs.getInt("user_id");
-                int bugId = rs.getInt("bug_id");
 
 
             }
