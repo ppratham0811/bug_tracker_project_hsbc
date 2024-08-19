@@ -119,9 +119,19 @@ public class TesterDao implements TesterDaoInterface{
             se.printStackTrace();
         }
 
-        try ( PreparedStatement selectPS = con.prepareStatement(getOwnBugsQuery)) {
-            selectPS.setInt(1, );
-            ResultSet rs = selectPS.executeQuery();
+        try (PreparedStatement userQueryPS = con.prepareStatement(getUserQuery);PreparedStatement bugQueryPS = con.prepareStatement(getOwnBugsQuery)) {
+            userQueryPS.setString(1, currentUser.getUsername());
+            ResultSet userRetrieved = userQueryPS.executeQuery();
+            int userId = 0;
+            if (userRetrieved.next()) {
+                userId = userRetrieved.getInt("user_id");
+            }
+
+
+
+            bugQueryPS.setInt(1, userId);
+            bugQueryPS.setInt(2, )
+            ResultSet rs = bugQueryPS.executeQuery();
 
             while (rs.next()) {
                 int userId = rs.getInt("user_id");
