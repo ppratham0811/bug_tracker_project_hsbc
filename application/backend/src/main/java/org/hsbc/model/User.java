@@ -17,23 +17,22 @@ public class User {
     private UserRole userRole;
     private int projectCount, userId;
     private LocalDate lastLoggedIn;
+    private static int firstUserId = 100000;
+
 
     public User () {}
+
+    public User(String username, String userPassword, UserRole userRole) {
+        this.username = username;
+        this.userPassword = userPassword;
+        this.userRole = userRole;
+        userId = ++firstUserId;
+    }
 
     public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public User(String username, String userPassword, UserRole userRole, int userId) {
-        this.username = username;
-        this.userPassword = userPassword;
-        this.userRole = userRole;
-        this.userId = userId;
-    }
 
     public String getUsername() {
         return username;
