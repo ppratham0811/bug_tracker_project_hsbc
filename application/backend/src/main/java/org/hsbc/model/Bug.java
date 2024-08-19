@@ -4,6 +4,7 @@ import org.hsbc.model.enums.ProjectOrBugStatus;
 import org.hsbc.model.enums.SeverityLevel;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Bug {
 //    bug_name VARCHAR(500),
@@ -16,14 +17,14 @@ public class Bug {
 
     private String bugName, bugDescription;
     private int createdBy;
-    private LocalDate createdOn;
+    private LocalDateTime createdOn;
     private SeverityLevel severityLevel;
     private int projectId;
     private ProjectOrBugStatus bugStatus;
 
     public Bug() {}
 
-    public Bug(String bugName, int createdBy, LocalDate createdOn, SeverityLevel severityLevel, int projectId) {
+    public Bug(String bugName, int createdBy, LocalDateTime createdOn, SeverityLevel severityLevel, int projectId) {
         this.bugName = bugName;
         this.createdBy = createdBy;
         this.createdOn = createdOn;
@@ -55,11 +56,11 @@ public class Bug {
         this.createdBy = createdBy;
     }
 
-    public LocalDate getCreatedOn() {
+    public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(LocalDate createdOn) {
+    public void setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
     }
 
