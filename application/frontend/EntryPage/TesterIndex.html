@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tester Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styletester.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../Home/index.html">STARBUGS</a>
+            <div class="d-flex">
+                <!-- <a href="index.html" class="btn btn-outline-light">Home</a> -->
+                <a href="../Home/index.html" class="btn btn-outline-light ms-2">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2>Tester Dashboard</h2>
+
+       
+        <div class="mb-4">
+            <p><strong>Username:</strong> <span id="username">Bob Johnson</span></p>
+            <p><strong>Email:</strong> <span id="email">bob.johnson@example.com</span></p>
+        </div>
+
+        <!-- Projects and Bugs -->
+        <div id="projectSection">
+            <!-- If no projects -->
+            <p id="noProjectMessage" style="display: none;" class="text-muted">You are not assigned to any project.</p>
+
+            <!-- If assigned to projects -->
+            <div id="projectList">
+                <!-- Projects and Bugs will be populated here -->
+            </div>
+        </div>
+
+        <!-- Link to Report a New Bug -->
+        <div class="mt-4">
+            <a href="BugFunctions/ReportBug.html" class="btn btn-primary">Report a New Bug</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample data for tester's projects and bugs
+        // needs to be populated more
+        
+        const testerData = {
+            username: "Bob Johnson",
+            email: "bob.johnson@example.com",
+            projects: [
+                {
+                    name: "Project Alpha",
+                    bugs: [
+                        { id: 1, title: "Login Issue", status: "Open" },
+                        { id: 2, title: "UI Glitch", status: "Closed" }
+                    ]
+                },
+                {
+                    name: "Project Beta",
+                    bugs: [
+                        { id: 3, title: "Data Sync Issue", status: "In Progress" }
+                    ]
+                }
+            ]
+        };
+
+        // Populate the Tester Dashboard
+        function populateTesterDashboard() {
+            document.getElementById('username').textContent = testerData.username;
+            document.getElementById('email').textContent = testerData.email;
+
+            const projectSection = document.getElementById('projectSection');
+            const projectList = document.getElementById('projectList');
+            const noProjectMessage = document.getElementById('noProjectMessage');
+
+            if (testerData.projects.length === 0) {
+                noProjectMessage.style.display = 'block';
+                projectList.style.display = 'none';
+            } else {
+                noProjectMessage.style.display = 'none';
+                projectList.style.display = 'block';
+
+                testerData.projects.forEach(project => {
+                    const projectCard = document.createElement('div');
+                    projectCard.className = 'card mb-3';
+
+                    const projectCardBody = document.createElement('div');
+                    projectCardBody.className = 'card-body';
+
+                    const projectTitle = document.createElement('h5');
+                    projectTitle.className = 'card-title';
+                    projectTitle.textContent = project.name;
+
+                    const bugList = document.createElement('ul');
+                    bugList.className = 'list-group list-group-flush';
+
+                    project.bugs.forEach(bug => {
+                        const bugItem = document.createElement('li');
+                        bugItem.className = 'list-group-item';
+                        bugItem.textContent = `${bug.title} (Status: ${bug.status})`;
+                        bugList.appendChild(bugItem);
+                    });
+
+                    projectCardBody.appendChild(projectTitle);
+                    projectCardBody.appendChild(bugList);
+                    projectCard.appendChild(projectCardBody);
+                    projectList.appendChild(projectCard);
+                });
+            }
+        }
+
+        //To be added in js
+        populateTesterDashboard();
+    </script>
+</body>
+</html>
