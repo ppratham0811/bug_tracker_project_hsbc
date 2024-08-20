@@ -11,8 +11,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class TesterDao implements TesterDaoInterface{
-
-
     @Override
     public void reportNewBug(Bug bug, Project project)  {
         String insertBugQuery = "INSERT INTO bugs (bug_name, bug_description, created_by, created_on, severity_level, bug_status, project_id) VALUES (?,?,?,?,?,?,?)";

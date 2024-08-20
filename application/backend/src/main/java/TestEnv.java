@@ -12,9 +12,15 @@ public class TestEnv {
     static Connection con = null;
 
     public static void main(String[] args) {
+<<<<<<< Updated upstream
 //        ManagerDao md = new ManagerDao();
 //        LocalDate date = LocalDate.parse("2025-01-10");
 //        Project p = new Project("moneymanager", 100002, date, ProjectOrBugStatus.IN_PROGRESS);
+=======
+        ManagerDao md = new ManagerDao();
+        LocalDate date = LocalDate.parse("2025-01-10");
+        Project p = new Project("moneymanager", 100002, date);
+>>>>>>> Stashed changes
 //        User u = new User("prathmesh", "root", UserRole.MANAGER);
 
 //        try {

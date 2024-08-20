@@ -4,51 +4,60 @@ import org.hsbc.db.JdbcConnector;
 import org.hsbc.exceptions.BugNotAcceptedException;
 import org.hsbc.model.Bug;
 import org.hsbc.model.Project;
+import org.hsbc.model.User;
+import org.hsbc.model.enums.BugStatus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DeveloperDao implements DeveloperDaoInterface { //UserNotFoundException?
-    @Override
-    public void viewAllTeamMembers(Project project) {
+public class DeveloperDao implements DeveloperDaoInterface {
+  @Override
+  public void viewAllProjectMembers(int projectId) {
 
-    }
+  }
 
-    @Override
-    public void changeBugStatusToMarked(Bug bug) throws BugNotAcceptedException {
-        if (bug.isAccepted()) {
-
-            if (bug.getBugStatus() == ProjectOrBugStatus.COMPLETED)
-                System.out.println("bug " + bug.getBugName() + " is already closed");
-            if (bug.getBugStatus() == ProjectOrBugStatus.IN_PROGRESS) {
-                bug.setBugStatus(ProjectOrBugStatus.COMPLETED);
-                String bugStatusQuery = "update bugs set bug_status = 'COMPLETED' where bug_name = " + bug.getBugName();
-                Connection con = null;
-                try {
-                    con = JdbcConnector.getInstance().getConnectionObject();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-
-                try (PreparedStatement insertPS = con.prepareStatement(bugStatusQuery)) {
-                    try (ResultSet rs = insertPS.executeQuery()) {
-                        rs.close();
-                        insertPS.close();
-                        con.close();
-                    }
-                } catch (SQLException se) {
-                    try {
-                        con.rollback();
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                    System.out.println(se.getMessage());
-                }
-            }
-        } else {
-            throw new BugNotAcceptedException();
+  @Override
+  public void changeBugStatusToMarked(Bug bug) throws BugNotAcceptedException {
+    if (bug.isAccepted()) {
+      if (bug.getBugStatus() == BugStatus.COMPLETED) {
+        System.out.println("bug " + bug.getBugName() + " is already closed");
+        return;
+      }
+      if (bug.getBugStatus() == BugStatus.IN_PROGRESS) {
+        bug.setBugStatus(BugStatus.MARKED);
+        String bugStatusQuery = "UPDATE bugs SET bug_status = 'MARKED' where bug_id = " + bug.getBugId();
+        Connection con = null;
+        try {
+          con = JdbcConnector.getInstance().getConnectionObject();
+        } catch (SQLException e) {
+          throw new RuntimeException(e);
         }
+
+        try (PreparedStatement insertPS = con.prepareStatement(bugStatusQuery)) {
+
+          ResultSet rs = insertPS.executeQuery();
+          rs.close();
+        } catch (SQLException se) {
+          try {
+            con.rollback();
+          } catch (SQLException e) {
+            throw new RuntimeException(e);
+          }
+          System.out.println(se.getMessage());
+
+        } finally {
+          try {
+            con.setAutoCommit(true);
+            con.close();
+          } catch (SQLException se) {
+            se.printStackTrace();
+          }
+        }
+      }
+    } else {
+      throw new BugNotAcceptedException();
     }
+  }
 }

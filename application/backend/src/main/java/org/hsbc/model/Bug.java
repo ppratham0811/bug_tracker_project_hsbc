@@ -6,101 +6,102 @@ import org.hsbc.model.enums.SeverityLevel;
 import java.time.LocalDateTime;
 
 public class Bug {
-//    bug_name VARCHAR(500),
-//    bug_description VARCHAR(1000),
-//    created_by INT,
-//    created_on DATETIME,
-//    severity_level ENUM('low', 'mid', 'high'),
-//    bug_status ENUM('in progress', 'closed'),
-//    project_id INT
+  // bug_name VARCHAR(500),
+  // bug_description VARCHAR(1000),
+  // created_by INT,
+  // created_on DATETIME,
+  // severity_level ENUM('low', 'mid', 'high'),
+  // bug_status ENUM('in progress', 'closed'),
+  // project_id INT
 
-    private String bugName, bugDescription;
-    private int createdBy;
-    private LocalDateTime createdOn;
-    private SeverityLevel severityLevel;
-    private int projectId, bugId;
-    private BugStatus bugStatus;
-    private boolean isAccepted;
-    private static int firstBugId = 1000;
+  private String bugName, bugDescription;
+  private int createdBy;
+  private LocalDateTime createdOn;
+  private SeverityLevel severityLevel;
+  private int projectId, bugId;
+  private BugStatus bugStatus;
+  private boolean accepted;
 
-    public Bug() {
-        bugId = ++firstBugId;
-    }
+  private static int firstBugId = 1000;
 
-    public Bug(String bugName, int createdBy, LocalDateTime createdOn, SeverityLevel severityLevel, int projectId) {
-        this.bugName = bugName;
-        this.createdBy = createdBy;
-        this.createdOn = createdOn;
-        this.severityLevel = severityLevel;
-        this.projectId = projectId;
-        bugId = ++firstBugId;
-    }
+  public Bug() {
+    bugId = ++firstBugId;
+  }
 
-    public boolean isAccepted() {
-        return isAccepted;
-    }
+  public Bug(String bugName, int createdBy, LocalDateTime createdOn, SeverityLevel severityLevel, int projectId) {
+    this.bugName = bugName;
+    this.createdBy = createdBy;
+    this.createdOn = createdOn;
+    this.severityLevel = severityLevel;
+    this.projectId = projectId;
+    bugId = ++firstBugId;
+  }
 
-    public int getBugId() {
-        return this.bugId;
-    }
+  public int getBugId() {
+    return bugId;
+  }
 
-    public void setAccepted(boolean accepted) {
-        isAccepted = accepted;
-    }
+  public boolean isAccepted() {
+    return accepted;
+  }
 
-    public String getBugName() {
-        return bugName;
-    }
+  public void setAccepted(boolean accepted) {
+    this.accepted = accepted;
+  }
 
-    public void setBugName(String bugName) {
-        this.bugName = bugName;
-    }
+  public String getBugName() {
+    return bugName;
+  }
 
-    public String getBugDescription() {
-        return bugDescription;
-    }
+  public void setBugName(String bugName) {
+    this.bugName = bugName;
+  }
 
-    public void setBugDescription(String bugDescription) {
-        this.bugDescription = bugDescription;
-    }
+  public String getBugDescription() {
+    return bugDescription;
+  }
 
-    public int getCreatedBy() {
-        return createdBy;
-    }
+  public void setBugDescription(String bugDescription) {
+    this.bugDescription = bugDescription;
+  }
 
-    public void setCreatedBy(int createdBy) {
-        this.createdBy = createdBy;
-    }
+  public int getCreatedBy() {
+    return createdBy;
+  }
 
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
-    }
+  public void setCreatedBy(int createdBy) {
+    this.createdBy = createdBy;
+  }
 
-    public void setCreatedOn(LocalDateTime createdOn) {
-        this.createdOn = createdOn;
-    }
+  public LocalDateTime getCreatedOn() {
+    return createdOn;
+  }
 
-    public SeverityLevel getSeverityLevel() {
-        return severityLevel;
-    }
+  public void setCreatedOn(LocalDateTime createdOn) {
+    this.createdOn = createdOn;
+  }
 
-    public void setSeverityLevel(SeverityLevel severityLevel) {
-        this.severityLevel = severityLevel;
-    }
+  public SeverityLevel getSeverityLevel() {
+    return severityLevel;
+  }
 
-    public int getProjectId() {
-        return projectId;
-    }
+  public void setSeverityLevel(SeverityLevel severityLevel) {
+    this.severityLevel = severityLevel;
+  }
 
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
-    }
+  public int getProjectId() {
+    return projectId;
+  }
 
-    public BugStatus getBugStatus() {
-        return bugStatus;
-    }
+  public void setProjectId(int projectId) {
+    this.projectId = projectId;
+  }
 
-    public void setBugStatus(BugStatus bugStatus) {
-        this.bugStatus = bugStatus;
-    }
+  public BugStatus getBugStatus() {
+    return bugStatus;
+  }
+
+  public void setBugStatus(BugStatus bugStatus) {
+    this.bugStatus = bugStatus;
+  }
 }

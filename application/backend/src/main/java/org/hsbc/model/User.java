@@ -19,8 +19,9 @@ public class User {
     private LocalDate lastLoggedIn;
     private static int firstUserId = 100000;
 
-
-    public User () {}
+    public User () {
+        userId = ++firstUserId;
+    }
 
     public User(String username, String fullName, String userPassword, String userEmail, UserRole userRole) {
         this.username = username;
@@ -34,7 +35,6 @@ public class User {
     public int getUserId() {
         return userId;
     }
-
 
     public String getUsername() {
         return username;
