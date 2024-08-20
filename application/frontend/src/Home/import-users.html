@@ -4,46 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Import Users</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Bug Tracker</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="register.html">User Registration</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="import-users.html">Import Users</a>
-                    </li>
-                </ul>
+    <body class="bg-gray-50 flex flex-col items-center min-h-screen">
+        <nav class="bg-gray-900 text-white w-full p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <a href="#" class="flex items-center space-x-2">
+                    <img
+                        src="../assets/logo.svg"
+                        alt="StarBugs Logo"
+                        class="h-8 w-auto filter invert brightness-0 text-white"
+                    />
+                    <span class="text-xl font-bold font-mono">STARBUGS</span>
+                </a>
+                <div class="space-x-4">
+                    <a href="index.html" class="hover:underline">Home</a>
+                    <a href="register.html" class="hover:underline">Sign Up</a>
+                    <a href="login.html" class="hover:underline">Login</a>
+                    <a href="import-users.html" class="text-blue-500 hover:underline">Import Users</a>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <div class="container mt-5">
-        <h2>Import Users</h2>
-        <form>
-            <div class="mb-3">
-                <label for="fileInput" class="form-label">Upload JSON/XML file</label>
-                <input type="file" class="form-control" id="fileInput" accept=".json, .xml" required>
+        <div
+        class="container mx-auto my-auto py-1 bg-white rounded-lg shadow-lg max-w-md"
+      >
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">
+            Upload JSON/XML file
+        </h2>
+            <div class="mb-3 lg:text-center ">
+                <label for="fileInput" class="block text-sm tracking-tight font-medium text-gray-700  my-auto text-center" ></label>
+                <input type="file" class="form-control hover:file:cursor-pointer hover:file:bg-blue-50 shadow-sm py-5 text-center " id="fileInput" accept=".json, .xml" required>
             </div>
-            <button type="submit" class="btn btn-primary">Import</button>
+            <button
+          type="import"
+          class="w-full bg-blue-600 text-white py-2 rounded-lg shadow-lg hover:bg-blue-700 transition duration-150 ease-in-out py-3"
+        >
+          Import 
+        </button>
         </form>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
 </body>
 </html>
