@@ -22,9 +22,11 @@ public class User {
 
     public User () {}
 
-    public User(String username, String userPassword, UserRole userRole) {
+    public User(String username, String fullName, String userPassword, String userEmail, UserRole userRole) {
         this.username = username;
+        this.fullName = fullName;
         this.userPassword = userPassword;
+        this.userEmail = userEmail;
         this.userRole = userRole;
         userId = ++firstUserId;
     }
