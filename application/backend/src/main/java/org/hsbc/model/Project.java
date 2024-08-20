@@ -1,35 +1,34 @@
 package org.hsbc.model;
 
-import org.hsbc.model.enums.ProjectOrBugStatus;
+import org.hsbc.model.enums.ProjectStatus;
 
-import java.time.LocalDate;
 import java.time.LocalDate;
 
 public class Project {
-    static {
-        int projectId = 101;
-    }
-
     private String projectName;
-    private ProjectOrBugStatus projectStatus;
-    private int projectManager;
+    private ProjectStatus projectStatus;
+    private int projectManager, projectId;
     private LocalDate startDate;
     private int noOfBugs;
+    private static int firstProjectId = 100;
 
     public Project() {
+        projectId = ++firstProjectId;
     }
 
     public Project(String projectName, int projectManager, LocalDate startDate) {
         this.projectName = projectName;
         this.projectManager = projectManager;
         this.startDate = startDate;
+        projectId = ++firstProjectId;
     }
 
-    public Project(String projectName, int projectManager, LocalDate startDate, ProjectOrBugStatus projectStatus) {
-        this.projectName = projectName;
-        this.projectStatus = projectStatus;
-        this.projectManager = projectManager;
-        this.startDate = startDate;
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public String getProjectName() {
@@ -40,11 +39,11 @@ public class Project {
         this.projectName = projectName;
     }
 
-    public ProjectOrBugStatus getProjectStatus() {
+    public ProjectStatus getProjectStatus() {
         return projectStatus;
     }
 
-    public void setProjectStatus(ProjectOrBugStatus projectStatus) {
+    public void setProjectStatus(ProjectStatus projectStatus) {
         this.projectStatus = projectStatus;
     }
 
@@ -71,4 +70,6 @@ public class Project {
     public void setNoOfBugs(int noOfBugs) {
         this.noOfBugs = noOfBugs;
     }
+
+
 }

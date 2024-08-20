@@ -2,9 +2,13 @@ package org.hsbc.dao.manager;
 //gd
 import org.hsbc.db.JdbcConnector;
 import org.hsbc.exceptions.ProjectLimitExceededException;
+import org.hsbc.exceptions.ProjectNotFoundException;
 import org.hsbc.exceptions.WrongProjectDateException;
+import org.hsbc.model.Bug;
 import org.hsbc.model.Project;
 import org.hsbc.model.User;
+import org.hsbc.model.enums.BugStatus;
+import org.hsbc.model.enums.ProjectStatus;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -40,6 +44,40 @@ public class ManagerDao implements ManagerDaoInterface {
             }
         }
         return -1;
+    }
+
+    @Override
+    public Project getProjectDetails(int projectId) throws ProjectNotFoundException {
+        String getProjectsQuery = "SELECT * FROM projects WHERE project_id = "+projectId;
+        Connection con = null;
+        try {
+            con = JdbcConnector.getInstance().getConnectionObject();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (PreparedStatement getProjectsPS = con.prepareStatement(getProjectsQuery)) {
+            ResultSet rs = getProjectsPS.executeQuery();
+            Project projectDetails = new Project();
+
+            projectDetails.setProjectId(projectId);
+            String projectName = rs.getString("project_name");
+            projectDetails.setProjectName(projectName);
+
+            String projectStatus = rs.getString("project_status");
+            ProjectStatus ps = ProjectStatus.IN_PROGRESS;
+            if (projectStatus == "COMPLETED") {
+                ps = ProjectStatus.COMPLETED;
+            }
+            projectDetails.setProjectStatus(ps);
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        throw new ProjectNotFoundException();
     }
 
     @Override
@@ -104,7 +142,6 @@ public class ManagerDao implements ManagerDaoInterface {
                 throw new RuntimeException(e);
             }
         }
-
     }
 
     @Override
@@ -137,12 +174,41 @@ public class ManagerDao implements ManagerDaoInterface {
         } catch (SQLException se) {
             System.out.println(se.getMessage());
         }
+    }
 
+    @Override
+    public void assignBug(Bug bug, int userId) {
 
     }
 
     @Override
-    public void assignBug() {
+    public void changeBugStatusToClosed(Bug bug) {
+        if(bug.getBugStatus() == BugStatus.COMPLETED)
+            System.out.println("bug "+bug.getBugName()+" is already closed");
+        if(bug.getBugStatus() == BugStatus.IN_PROGRESS){
+            bug.setBugStatus(BugStatus.COMPLETED);
+            String bugStatusQuery = "update bugs set bug_status = 'COMPLETED' where bug_name = "+bug.getBugName();
+            Connection con = null;
+            try {
+                con = JdbcConnector.getInstance().getConnectionObject();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
+            try (PreparedStatement insertPS = con.prepareStatement(bugStatusQuery)) {
+                try (ResultSet rs = insertPS.executeQuery()) {
+                    rs.close();
+                    insertPS.close();
+                    con.close();
+                }
+            }catch (SQLException se) {
+                try {
+                    con.rollback();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println(se.getMessage());
+            }
+        }
     }
 }

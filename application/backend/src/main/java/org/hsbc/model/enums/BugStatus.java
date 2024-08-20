@@ -1,6 +1,7 @@
 package org.hsbc.model.enums;
 
-public enum ProjectOrBugStatus {
+public enum BugStatus {
+    MARKED,
     COMPLETED,
     IN_PROGRESS
 }

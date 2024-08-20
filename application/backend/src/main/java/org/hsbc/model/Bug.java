@@ -1,9 +1,8 @@
 package org.hsbc.model;
 
-import org.hsbc.model.enums.ProjectOrBugStatus;
+import org.hsbc.model.enums.BugStatus;
 import org.hsbc.model.enums.SeverityLevel;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Bug {
@@ -19,10 +18,14 @@ public class Bug {
     private int createdBy;
     private LocalDateTime createdOn;
     private SeverityLevel severityLevel;
-    private int projectId;
-    private ProjectOrBugStatus bugStatus;
+    private int projectId, bugId;
+    private BugStatus bugStatus;
+    private boolean isAccepted;
+    private static int firstBugId = 1000;
 
-    public Bug() {}
+    public Bug() {
+        bugId = ++firstBugId;
+    }
 
     public Bug(String bugName, int createdBy, LocalDateTime createdOn, SeverityLevel severityLevel, int projectId) {
         this.bugName = bugName;
@@ -30,6 +33,19 @@ public class Bug {
         this.createdOn = createdOn;
         this.severityLevel = severityLevel;
         this.projectId = projectId;
+        bugId = ++firstBugId;
+    }
+
+    public boolean isAccepted() {
+        return isAccepted;
+    }
+
+    public int getBugId() {
+        return this.bugId;
+    }
+
+    public void setAccepted(boolean accepted) {
+        isAccepted = accepted;
     }
 
     public String getBugName() {
@@ -80,11 +96,11 @@ public class Bug {
         this.projectId = projectId;
     }
 
-    public ProjectOrBugStatus getBugStatus() {
+    public BugStatus getBugStatus() {
         return bugStatus;
     }
 
-    public void setBugStatus(ProjectOrBugStatus bugStatus) {
+    public void setBugStatus(BugStatus bugStatus) {
         this.bugStatus = bugStatus;
     }
 }

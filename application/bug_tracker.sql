@@ -58,7 +58,8 @@ CREATE TABLE bugs (
     created_by INT NOT NULL,
     created_on DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     severity_level ENUM('LOW', 'MID', 'HIGH') NOT NULL,
-    bug_status ENUM('IN_PROGRESS', 'COMPLETED') DEFAULT 'IN_PROGRESS',
+    bug_status ENUM('MARKED', 'IN_PROGRESS', 'COMPLETED') DEFAULT 'IN_PROGRESS',
+    accepted BOOLEAN DEFAULT false,
     project_id INT NOT NULL
 ) AUTO_INCREMENT = 1001;
 
