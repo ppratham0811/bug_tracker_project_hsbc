@@ -13,15 +13,19 @@ import java.sql.SQLException;
 public class DeveloperDao implements DeveloperDaoInterface { //UserNotFoundException?
     @Override
     public void readAssignedProjects(User user) {
-        String getProjectDetailsQuery = "SELECT p.project_name, u_manager.full_name AS project_manager, p.start_date, " +
-                "GROUP_CONCAT(u_member.full_name SEPARATOR ', ') AS members " +
-                "FROM projects p " +
-                "JOIN user_projects up_manager ON p.project_manager = up_manager.user_id " +
-                "JOIN users u_manager ON p.project_manager = u_manager.user_id " +
-                "JOIN user_projects up_member ON p.project_id = up_member.project_id " +
-                "JOIN users u_member ON up_member.user_id = u_member.user_id " +
-                "WHERE u_member.user_id = "+ user.getUserId()+
-                " GROUP BY p.project_id, u_manager.full_name, p.start_date";
+        String getProjectDetailsQuery = "SELECT p.project_name," +
+                "(SELECT full_name FROM users WHERE user_id = p.project_manager)" +
+                "AS project_manager, p.start_date," +
+                "GROUP_CONCAT(u_member.full_name SEPARATOR ', ') AS members" +
+                "FROM projects p" +
+                "JOIN" +
+                "user_projects up_member ON p.project_id = up_member.project_id" +
+                "JOIN" +
+                "users u_member ON up_member.user_id = u_member.user_id\n" +
+                "WHERE" +
+                "u_member.user_id = " + user.getUserId()+
+                "GROUP BY" +
+                "p.project_id, p.project_manager, p.start_date;";
         Connection con = null;
         try {
             con = JdbcConnector.getInstance().getConnectionObject();
