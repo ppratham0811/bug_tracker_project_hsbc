@@ -1,70 +1,75 @@
 package org.hsbc.model;
 
-import org.hsbc.model.enums.ProjectOrBugStatus;
+import org.hsbc.model.enums.ProjectStatus;
 
-import java.time.LocalDate;
 import java.time.LocalDate;
 
 public class Project {
-    private String projectName;
-    private ProjectOrBugStatus projectStatus;
-    private int projectManager;
-    private LocalDate startDate;
-    private int noOfBugs;
 
-    public Project() {
-    }
+  private String projectName;
+  private ProjectStatus projectStatus;
+  private int projectManager, projectId;
+  private LocalDate startDate;
+  private int noOfBugs;
+  private static int firstProjectId = 100;
 
-    public Project(String projectName, int projectManager, LocalDate startDate) {
-        this.projectName = projectName;
-        this.projectManager = projectManager;
-        this.startDate = startDate;
-    }
+  public Project() {
+    projectId = ++firstProjectId;
+  }
 
-    public Project(String projectName, int projectManager, LocalDate startDate, ProjectOrBugStatus projectStatus) {
-        this.projectName = projectName;
-        this.projectStatus = projectStatus;
-        this.projectManager = projectManager;
-        this.startDate = startDate;
-    }
+  public Project(String projectName, int projectManager, LocalDate startDate) {
+    this.projectName = projectName;
+    this.projectManager = projectManager;
+    this.startDate = startDate;
+    projectId = ++firstProjectId;
+  }
 
-    public String getProjectName() {
-        return projectName;
-    }
+  public void setProjectId(int projectId) {
+    this.projectId = projectId;
+  }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
+  public int getProjectId() {
+    return projectId;
+  }
 
-    public ProjectOrBugStatus getProjectStatus() {
-        return projectStatus;
-    }
+  public String getProjectName() {
+    return projectName;
+  }
 
-    public void setProjectStatus(ProjectOrBugStatus projectStatus) {
-        this.projectStatus = projectStatus;
-    }
+  public void setProjectName(String projectName) {
+    this.projectName = projectName;
+  }
 
-    public int getProjectManager() {
-        return projectManager;
-    }
+  public ProjectStatus getProjectStatus() {
+    return projectStatus;
+  }
 
-    public void setProjectManager(int projectManager) {
-        this.projectManager = projectManager;
-    }
+  public void setProjectStatus(ProjectStatus projectStatus) {
+    this.projectStatus = projectStatus;
+  }
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
+  public int getProjectManager() {
+    return projectManager;
+  }
 
-    public void setStartDate(LocalDate start_date) {
-        this.startDate = start_date;
-    }
+  public void setProjectManager(int projectManager) {
+    this.projectManager = projectManager;
+  }
 
-    public int getNoOfBugs() {
-        return noOfBugs;
-    }
+  public LocalDate getStartDate() {
+    return startDate;
+  }
 
-    public void setNoOfBugs(int noOfBugs) {
-        this.noOfBugs = noOfBugs;
-    }
+  public void setStartDate(LocalDate start_date) {
+    this.startDate = start_date;
+  }
+
+  public int getNoOfBugs() {
+    return noOfBugs;
+  }
+
+  public void setNoOfBugs(int noOfBugs) {
+    this.noOfBugs = noOfBugs;
+  }
+
 }

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Project</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="stylesCreateProj.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../../Home/index.html">Bug Tracker</a>
+            <div class="d-flex">
+                <a href="../PMindex.html" class="btn btn-outline-light">Back</a>
+                <a href="../../Home/index.html" class="btn btn-outline-light ms-2">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2>Create New Project</h2>
+        <form id="newProjectForm" onsubmit="return validateForm()">
+            <!-- Project Name -->
+            <div class="mb-3">
+                <label for="projectName" class="form-label">Project Name</label>
+                <input type="text" class="form-control" id="projectName" required>
+            </div>
+
+            <!-- Start Date -->
+            <div class="mb-3">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="startDate" required>
+            </div>
+
+            <!-- Team Member Assignment -->
+            <div class="mb-3">
+                <label class="form-label">Assign Team Members</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Alice Smith" id="teamMember1" data-role="Developer">
+                    <label class="form-check-label" for="teamMember1">Alice Smith (Developer)</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Bob Johnson" id="teamMember2" data-role="Tester">
+                    <label class="form-check-label" for="teamMember2">Bob Johnson (Tester)</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="Carol White" id="teamMember3" data-role="Developer">
+                    <label class="form-check-label" for="teamMember3">Carol White (Developer)</label>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Create Project</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample data for validation
+        const existingProjects = {
+            "Alice Smith": 1, // Assigned to 1 project
+            "Bob Johnson": 1, // Assigned to 1 project
+            "Carol White": 0  // Not yet assigned
+        };
+
+        // Validate the form before submission
+        function validateForm() {
+            const projectName = document.getElementById("projectName").value;
+            const startDate = document.getElementById("startDate").value;
+            const selectedTeamMembers = document.querySelectorAll('input[type="checkbox"]:checked');
+            const currentDate = new Date();
+            const startDateObj = new Date(startDate);
+            const minStartDate = new Date();
+            minStartDate.setDate(currentDate.getDate() + 2);
+
+            // Validate start date
+            if (startDateObj < minStartDate) {
+                alert("Start date must be at least 2 days later than the current date.");
+                return false;
+            }
+
+            // Validate team member assignment
+            let developerCount = 0;
+            let testerCount = 0;
+
+            selectedTeamMembers.forEach(member => {
+                const role = member.getAttribute('data-role');
+                const name = member.value;
+
+                if (role === "Developer") {
+                    developerCount++;
+                    if (existingProjects[name] > 0) {
+                        alert(`Developer ${name} is already assigned to another project.`);
+                        return false;
+                    }
+                }
+
+                if (role === "Tester") {
+                    testerCount++;
+                    if (existingProjects[name] >= 2) {
+                        alert(`Tester ${name} is already assigned to 2 projects.`);
+                        return false;
+                    }
+                }
+            });
+
+            if (developerCount > 1) {
+                alert("A project can have only one Developer.");
+                return false;
+            }
+
+            if (testerCount > 2) {
+                alert("A project can have a maximum of 2 Testers.");
+                return false;
+            }
+
+            // Generate a unique project ID
+            const projectId = Math.floor(Math.random() * 10000);
+            console.log("Project ID generated: " + projectId);
+
+            // Add the new project to the existingProjects (this is for demo purposes)
+            selectedTeamMembers.forEach(member => {
+                const name = member.value;
+                existingProjects[name] = (existingProjects[name] || 0) + 1;
+            });
+
+            alert(`Project "${projectName}" created successfully with ID: ${projectId}`);
+            return true;
+        }
+    </script>
+</body>
+</html>

@@ -2,6 +2,8 @@ CREATE DATABASE bug_tracker;
 
 USE bug_tracker;
 
+show tables;
+
 
 -- ------------------ users table ---------------------
 
@@ -22,13 +24,12 @@ SELECT * FROM users;
 
 DROP TABLE users;
 
-
 -- ------------------ projects table ----------------
 
 CREATE TABLE projects (
 	project_id INT PRIMARY KEY AUTO_INCREMENT,
     project_name VARCHAR(100) NOT NULL,
-    project_status ENUM('COMPLETED', 'IN_PROGRESS') DEFAULT 'IN_PROGRESS',
+    project_status ENUM('IN_PROGRESS', 'COMPLETED') DEFAULT 'IN_PROGRESS',
     project_manager INT NOT NULL,
     start_date DATE NOT NULL,
     no_of_bugs INT
@@ -42,7 +43,7 @@ ON DELETE CASCADE;
 
 ALTER TABLE projects DROP FOREIGN KEY pfk_project_manager;
 
-INSERT INTO projects (project_name, project_status, project_manager, no_of_bugs) VALUES ("BUG TRACKER", "COMPLETED", 12, 6);
+INSERT INTO projects (project_name, project_status, project_manager, no_of_bugs, start_date) VALUES ("BUG TRACKER", "COMPLETED", 100002, 6, "2024-08-14");
 
 SELECT * FROM projects;
 
@@ -58,7 +59,12 @@ CREATE TABLE bugs (
     created_by INT NOT NULL,
     created_on DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     severity_level ENUM('LOW', 'MID', 'HIGH') NOT NULL,
-    bug_status ENUM('IN_PROGRESS', 'COMPLETED') DEFAULT 'IN_PROGRESS',
+<<<<<<< Updated upstream
+    bug_status ENUM('MARKED', 'IN_PROGRESS', 'COMPLETED') DEFAULT 'IN_PROGRESS',
+=======
+    bug_status ENUM('IN_PROGRESS', 'MARKED', 'COMPLETED') DEFAULT 'IN_PROGRESS',
+>>>>>>> Stashed changes
+    accepted BOOLEAN DEFAULT false,
     project_id INT NOT NULL
 ) AUTO_INCREMENT = 1001;
 
@@ -145,5 +151,19 @@ ALTER TABLE user_bugs DROP FOREIGN KEY ubfk_user_id;
 ALTER TABLE user_bugs DROP FOREIGN KEY ubfk_bug_id;
 
 DROP TABLE user_bugs;
+
+
+INSERT INTO users(username, user_password, user_role) VALUES ("prathmesh", "root", "MANAGER");
+INSERT INTO projects (project_name, project_status, project_manager, no_of_bugs, start_date) VALUES ("BUG TRACKER", "COMPLETED", 100001, 6, "2024-08-14");
+
+
+INSERT INTO users(username, user_password, user_role) VALUES ("guru", "root", "DEVELOPER");
+INSERT INTO projects (project_name, project_status, project_manager, no_of_bugs, start_date) VALUES ("Hospital mgmt", "COMPLETED", 100002, 6, "2024-08-14");
+
+INSERT INTO users(username, user_password, user_role) VALUES ("ishaan", "root", "TESTER");
+INSERT INTO projects (project_name, project_status, project_manager, no_of_bugs, start_date) VALUES ("BUG TRACKER", "COMPLETED", 100001, 6, "2024-08-14");
+
+SELECT * FROM user_projects up LEFT JOIN projects p ON up.project_id = p.project_id WHERE up.user_id = 100001;
+
 
 

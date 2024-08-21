@@ -19,12 +19,15 @@ public class User {
     private LocalDate lastLoggedIn;
     private static int firstUserId = 100000;
 
+    public User () {
+        userId = ++firstUserId;
+    }
 
-    public User () {}
-
-    public User(String username, String userPassword, UserRole userRole) {
+    public User(String username, String fullName, String userPassword, String userEmail, UserRole userRole) {
         this.username = username;
+        this.fullName = fullName;
         this.userPassword = userPassword;
+        this.userEmail = userEmail;
         this.userRole = userRole;
         userId = ++firstUserId;
     }
@@ -32,7 +35,6 @@ public class User {
     public int getUserId() {
         return userId;
     }
-
 
     public String getUsername() {
         return username;

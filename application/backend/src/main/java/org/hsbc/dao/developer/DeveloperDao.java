@@ -1,97 +1,63 @@
 package org.hsbc.dao.developer;
 
 import org.hsbc.db.JdbcConnector;
+import org.hsbc.exceptions.BugNotAcceptedException;
 import org.hsbc.model.Bug;
+import org.hsbc.model.Project;
 import org.hsbc.model.User;
-import org.hsbc.model.enums.ProjectOrBugStatus;
+import org.hsbc.model.enums.BugStatus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DeveloperDao implements DeveloperDaoInterface { //UserNotFoundException?
-    @Override
-    public void readAssignedProjects(User user) {
-        String getProjectDetailsQuery = "SELECT p.project_name," +
-                "(SELECT full_name FROM users WHERE user_id = p.project_manager)" +
-                "AS project_manager, p.start_date," +
-                "GROUP_CONCAT(u_member.full_name SEPARATOR ', ') AS members" +
-                "FROM projects p" +
-                "JOIN" +
-                "user_projects up_member ON p.project_id = up_member.project_id" +
-                "JOIN" +
-                "users u_member ON up_member.user_id = u_member.user_id\n" +
-                "WHERE" +
-                "u_member.user_id = " + user.getUserId()+
-                "GROUP BY" +
-                "p.project_id, p.project_manager, p.start_date;";
+public class DeveloperDao implements DeveloperDaoInterface {
+  @Override
+  public void viewAllProjectMembers(int projectId) {
+
+  }
+
+  @Override
+  public void changeBugStatusToMarked(Bug bug) throws BugNotAcceptedException {
+    if (bug.isAccepted()) {
+      if (bug.getBugStatus() == BugStatus.COMPLETED) {
+        System.out.println("bug " + bug.getBugName() + " is already closed");
+        return;
+      }
+      if (bug.getBugStatus() == BugStatus.IN_PROGRESS) {
+        bug.setBugStatus(BugStatus.MARKED);
+        String bugStatusQuery = "UPDATE bugs SET bug_status = 'MARKED' where bug_id = " + bug.getBugId();
         Connection con = null;
         try {
-            con = JdbcConnector.getInstance().getConnectionObject();
+          con = JdbcConnector.getInstance().getConnectionObject();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+          throw new RuntimeException(e);
         }
 
-        try (PreparedStatement insertPS = con.prepareStatement(getProjectDetailsQuery)) {
-            try(ResultSet rs = insertPS.executeQuery()){
-                if (rs==null)
-                    System.out.println("no project assigned"); //we can add exception later, if needed
-                while (rs.next()) {
-                    String projectName = rs.getString("project_name");
-                    String projectManager = rs.getString("project_manager");
-                    String startDate = rs.getString("start_date");
-                    String members = rs.getString("members");
+        try (PreparedStatement insertPS = con.prepareStatement(bugStatusQuery)) {
 
-                    System.out.println("Project Name: " + projectName);
-                    System.out.println("Project Manager: " + projectManager);
-                    System.out.println("Start Date: " + startDate);
-                    System.out.println("Members: " + members);
-                    System.out.println("-------------------------------");
-                }
-                rs.close();
-                insertPS.close();
-                con.close();
-
-            }
+          ResultSet rs = insertPS.executeQuery();
+          rs.close();
         } catch (SQLException se) {
-            try {
-                con.rollback();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            System.out.println(se.getMessage());
-        }
-    }
+          try {
+            con.rollback();
+          } catch (SQLException e) {
+            throw new RuntimeException(e);
+          }
+          System.out.println(se.getMessage());
 
-    @Override
-    public void changeBugStatusToClosed(Bug bug) {
-        if(bug.getBugStatus() == ProjectOrBugStatus.COMPLETED)
-            System.out.println("bug "+bug.getBugName()+" is already closed");
-        if(bug.getBugStatus() == ProjectOrBugStatus.IN_PROGRESS){
-            bug.setBugStatus(ProjectOrBugStatus.COMPLETED);
-            String bugStatusQuery = "update bugs set bug_status = 'COMPLETED' where bug_name = "+bug.getBugName();
-            Connection con = null;
-            try {
-                con = JdbcConnector.getInstance().getConnectionObject();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-
-            try (PreparedStatement insertPS = con.prepareStatement(bugStatusQuery)) {
-                try (ResultSet rs = insertPS.executeQuery()) {
-                    rs.close();
-                    insertPS.close();
-                    con.close();
-                }
-            }catch (SQLException se) {
-                try {
-                    con.rollback();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-                System.out.println(se.getMessage());
-            }
+        } finally {
+          try {
+            con.setAutoCommit(true);
+            con.close();
+          } catch (SQLException se) {
+            se.printStackTrace();
+          }
         }
+      }
+    } else {
+      throw new BugNotAcceptedException();
     }
+  }
 }

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Users</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+</head>
+<body>
+    <body class="bg-gray-50 flex flex-col items-center min-h-screen">
+        <nav class="bg-gray-900 text-white w-full p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <a href="#" class="flex items-center space-x-2">
+                    <img
+                        src="../assets/logo.svg"
+                        alt="StarBugs Logo"
+                        class="h-8 w-auto filter invert brightness-0 text-white"
+                    />
+                    <span class="text-xl font-bold font-mono">STARBUGS</span>
+                </a>
+                <div class="space-x-4">
+                    <a href="index.html" class="hover:underline">Home</a>
+                    <a href="register.html" class="hover:underline">Sign Up</a>
+                    <a href="login.html" class="hover:underline">Login</a>
+                    <a href="import-users.html" class="text-blue-500 hover:underline">Import Users</a>
+                </div>
+            </div>
+        </nav>
+
+        <div
+        class="container mx-auto my-auto py-1 bg-white rounded-lg shadow-lg max-w-md"
+      >
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">
+            Upload JSON/XML file
+        </h2>
+            <div class="mb-3 lg:text-center ">
+                <label for="fileInput" class="block text-sm tracking-tight font-medium text-gray-700  my-auto text-center" ></label>
+                <input type="file" class="form-control hover:file:cursor-pointer hover:file:bg-blue-50 shadow-sm py-5 text-center " id="fileInput" accept=".json, .xml" required>
+            </div>
+            <button
+          type="import"
+          class="w-full bg-blue-600 text-white py-2 rounded-lg shadow-lg hover:bg-blue-700 transition duration-150 ease-in-out text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none
+          focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80"
+        >
+          Import 
+        </button>
+        </form>
+    </div>
+
+    
+</body>
+</html>

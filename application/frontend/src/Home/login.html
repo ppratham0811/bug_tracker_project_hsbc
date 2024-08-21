@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StarBugs - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 flex flex-col items-center min-h-screen">
+    <nav class="bg-gray-900 text-white w-full p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <img
+                    src="../assets/logo.svg"
+                    alt="StarBugs Logo"
+                    class="h-8 w-auto filter invert brightness-0 text-white"
+                />
+                <span class="text-xl font-bold font-mono">STARBUGS</span>
+            </a>
+            <div class="space-x-4">
+                <a href="index.html" class="hover:underline">Home</a>
+                <a href="register.html" class="hover:underline">Sign Up</a>
+                <a href="login.html" class="text-blue-500 hover:underline">Login</a>
+                <a href="import-users.html" class="hover:underline">Import Users</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto my-auto p-4 bg-white rounded-lg shadow-lg max-w-md">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Login</h2>
+        <form id="loginForm">
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input
+                    type="text"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    id="username"
+                    required
+                />
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input
+                    type="password"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    id="password"
+                    required
+                />
+            </div>
+            <button
+                type="submit"
+                class="w-full bg-blue-600 text-white py-2 rounded-lg shadow-lg hover:bg-blue-700 transition duration-150 ease-in-out text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none
+                 focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80">
+                Login
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const pwdInput = document.getElementById('password').value;
+
+            if (pwdInput.startsWith('P') || pwdInput.startsWith('p')) {
+                window.location.href = "../EntryPage/PMindex.html";
+            } else if (pwdInput.startsWith('T') || pwdInput.startsWith('t')) {
+                window.location.href = "../EntryPage/Testerindex.html";
+            } else if (pwdInput.startsWith('D') || pwdInput.startsWith('d')) {
+                window.location.href = "../EntryPage/Developerindex.html";
+            } else {
+                alert("The credentials must be wrong!!");
+            }
+        });
+    </script>
+</body>
+</html>
