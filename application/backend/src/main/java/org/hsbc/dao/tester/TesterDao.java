@@ -14,9 +14,9 @@ public class TesterDao implements TesterDaoInterface{
     @Override
     public void reportNewBug(Bug bug, Project project)  {
         String insertBugQuery = "INSERT INTO bugs (bug_name, bug_description, created_by, created_on, severity_level, bug_status, project_id) VALUES (?,?,?,?,?,?,?)";
-        //bug status and project id likhna hai kya nhi
+        //bug status and project id
         String addBugQuery = "UPDATE projects SET bug_count = ? WHERE user_id = ? and project_id = ?";
-        //UPDATE users SET  = ? WHERE user_id = ?    users mein bug count chahiye kya
+        //UPDATE users SET  = ? WHERE user_id = ?
         String getTesterQuery = "SELECT * FROM users WHERE user_id = ?";
         Connection con = null;
 
@@ -58,48 +58,48 @@ public class TesterDao implements TesterDaoInterface{
         }
     }
 
-    @Override
-    public Collection<Project> viewAssignedProjects(User currentUser) {
-        String getUserQuery = "SELECT * FROM users WHERE username = ?";
-        String getProjectsQuery = "SELECT * FROM user_projects WHERE user_id = ?";
-        Connection con = null;
-
-        try {
-           con = JdbcConnector.getInstance().getConnectionObject();
-           con.setAutoCommit(false);
-        } catch (SQLException se) {
-            se.printStackTrace();
-        }
-
-        try (PreparedStatement getUserPS = con.prepareStatement(getUserQuery); PreparedStatement selectPS = con.prepareStatement(getProjectsQuery)) {
-            getUserPS.setString(1, currentUser.getUsername());
-            ResultSet rs = getUserPS.executeQuery();
-            int userId = 0;
-            if (rs.next()) {
-                userId = rs.getInt("user_id");
-            }
-
-            selectPS.setInt(1, userId);
-            ResultSet allProjects = selectPS.executeQuery();
-
-
-
-            con.commit();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                con.setAutoCommit(true);
-                con.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-//        ResultSet rs = ;
-        return List.of();
-    }
+//    @Override
+//    public Collection<Project> viewAssignedProjects(User currentUser) {
+//        String getUserQuery = "SELECT * FROM users WHERE username = ?";
+//        String getProjectsQuery = "SELECT * FROM user_projects WHERE user_id = ?";
+//        Connection con = null;
+//
+//        try {
+//           con = JdbcConnector.getInstance().getConnectionObject();
+//           con.setAutoCommit(false);
+//        } catch (SQLException se) {
+//            se.printStackTrace();
+//        }
+//
+//        try (PreparedStatement getUserPS = con.prepareStatement(getUserQuery); PreparedStatement selectPS = con.prepareStatement(getProjectsQuery)) {
+//            getUserPS.setString(1, currentUser.getUsername());
+//            ResultSet rs = getUserPS.executeQuery();
+//            int userId = 0;
+//            if (rs.next()) {
+//                userId = rs.getInt("user_id");
+//            }
+//
+//            selectPS.setInt(1, userId);
+//            ResultSet allProjects = selectPS.executeQuery();
+//
+//
+//
+//            con.commit();
+//
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        } finally {
+//            try {
+//                con.setAutoCommit(true);
+//                con.close();
+//            } catch (SQLException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//
+////        ResultSet rs = ;
+//        return List.of();
+//    }
 
     @Override
     public Collection<Bug> viewOwnBugs(User currentUser, Project project) {
