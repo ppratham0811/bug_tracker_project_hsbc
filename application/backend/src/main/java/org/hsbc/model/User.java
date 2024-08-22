@@ -19,7 +19,16 @@ public class User {
     private LocalDate lastLoggedIn;
     private static int firstUserId = 100000;
 
-    public User () {
+    public User() {
+        // when a blank object is created using this constructor, set the values manually
+        // this is done to avoid userId increment
+    }
+
+    public User(String username, String fullName, String userEmail, UserRole userRole) {
+        this.username = username;
+        this.fullName = fullName;
+        this.userEmail = userEmail;
+        this.userRole = userRole;
         userId = ++firstUserId;
     }
 
@@ -32,8 +41,17 @@ public class User {
         userId = ++firstUserId;
     }
 
+    @Override
+    protected void finalize() {
+        userId = --firstUserId;
+    }
+
     public int getUserId() {
         return userId;
+    }
+
+    public void setUserId(int i) {
+        userId = i;
     }
 
     public String getUsername() {

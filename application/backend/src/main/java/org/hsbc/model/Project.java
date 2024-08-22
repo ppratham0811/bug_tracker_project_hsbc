@@ -6,70 +6,76 @@ import java.time.LocalDate;
 
 public class Project {
 
-  private String projectName;
-  private ProjectStatus projectStatus;
-  private int projectManager, projectId;
-  private LocalDate startDate;
-  private int noOfBugs;
-  private static int firstProjectId = 100;
+    private String projectName;
+    private ProjectStatus projectStatus;
+    private int projectManager, projectId;
+    private LocalDate startDate;
+    private int noOfBugs;
+    private static int firstProjectId = 100;
 
-  public Project() {
-    projectId = ++firstProjectId;
-  }
+    public Project() {
+        // when a blank object is created using this constructor, set the values manually
+        // this is done to avoid userId increment
+    }
 
-  public Project(String projectName, int projectManager, LocalDate startDate) {
-    this.projectName = projectName;
-    this.projectManager = projectManager;
-    this.startDate = startDate;
-    projectId = ++firstProjectId;
-  }
+    public Project(String projectName, int projectManager, LocalDate startDate) {
+        this.projectName = projectName;
+        this.projectManager = projectManager;
+        this.startDate = startDate;
+        projectId = ++firstProjectId;
+    }
 
-  public void setProjectId(int projectId) {
-    this.projectId = projectId;
-  }
+    @Override
+    protected void finalize() throws Throwable {
+        projectId = --firstProjectId;
+    }
 
-  public int getProjectId() {
-    return projectId;
-  }
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
 
-  public String getProjectName() {
-    return projectName;
-  }
+    public int getProjectId() {
+        return projectId;
+    }
 
-  public void setProjectName(String projectName) {
-    this.projectName = projectName;
-  }
+    public String getProjectName() {
+        return projectName;
+    }
 
-  public ProjectStatus getProjectStatus() {
-    return projectStatus;
-  }
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
 
-  public void setProjectStatus(ProjectStatus projectStatus) {
-    this.projectStatus = projectStatus;
-  }
+    public ProjectStatus getProjectStatus() {
+        return projectStatus;
+    }
 
-  public int getProjectManager() {
-    return projectManager;
-  }
+    public void setProjectStatus(ProjectStatus projectStatus) {
+        this.projectStatus = projectStatus;
+    }
 
-  public void setProjectManager(int projectManager) {
-    this.projectManager = projectManager;
-  }
+    public int getProjectManager() {
+        return projectManager;
+    }
 
-  public LocalDate getStartDate() {
-    return startDate;
-  }
+    public void setProjectManager(int projectManager) {
+        this.projectManager = projectManager;
+    }
 
-  public void setStartDate(LocalDate start_date) {
-    this.startDate = start_date;
-  }
+    public LocalDate getStartDate() {
+        return startDate;
+    }
 
-  public int getNoOfBugs() {
-    return noOfBugs;
-  }
+    public void setStartDate(LocalDate start_date) {
+        this.startDate = start_date;
+    }
 
-  public void setNoOfBugs(int noOfBugs) {
-    this.noOfBugs = noOfBugs;
-  }
+    public int getNoOfBugs() {
+        return noOfBugs;
+    }
+
+    public void setNoOfBugs(int noOfBugs) {
+        this.noOfBugs = noOfBugs;
+    }
 
 }
