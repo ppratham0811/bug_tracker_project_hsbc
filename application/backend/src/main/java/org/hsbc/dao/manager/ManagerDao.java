@@ -16,7 +16,15 @@ import java.time.LocalDate;
 
 public class ManagerDao implements ManagerDaoInterface {
   // private Connection con = null;
+  // private Connection con = null;
 
+  // public ManagerDao() {
+  // try {
+  // this.con = JdbcConnector.getInstance().getConnectionObject();
+  // } catch (SQLException e) {
+  // throw new RuntimeException("Failed to establish database connection", e);
+  // }
+  // }
   // public ManagerDao() {
   // try {
   // this.con = JdbcConnector.getInstance().getConnectionObject();
@@ -68,11 +76,7 @@ public class ManagerDao implements ManagerDaoInterface {
         projectDetails.setProjectName(projectName);
 
         String projectStatus = rs.getString("project_status");
-        ProjectStatus ps = ProjectStatus.IN_PROGRESS;
-        if (projectStatus == "COMPLETED") {
-          ps = ProjectStatus.COMPLETED;
-        }
-        projectDetails.setProjectStatus(ps);
+        projectDetails.setProjectStatus(ProjectStatus.valueOf(projectStatus.toUpperCase()));
 
         int projectManager = rs.getInt("project_manager");
         projectDetails.setProjectManager(projectManager);
@@ -89,9 +93,9 @@ public class ManagerDao implements ManagerDaoInterface {
       throw new RuntimeException(e);
     }
 
-    throw new ProjectNotFoundException();
+    throw new ProjectNotFoundException("Project with projectId =" + projectId + " not found");
   }
-
+  
   @Override
   public void createNewProject(Project project) throws ProjectLimitExceededException, WrongProjectDateException {
     String insertProjectQuery = "INSERT INTO projects (project_name, project_manager, start_date, project_status) VALUES (?,?,?,?)";
@@ -117,6 +121,8 @@ public class ManagerDao implements ManagerDaoInterface {
 
         // need to add +1 to project manager's project count
         selectPS.setInt(1, project.getProjectManager());
+        // need to add +1 to project manager's project count
+        selectPS.setInt(1, project.getProjectManager());
 
         try (ResultSet rs = selectPS.executeQuery();) {
           int projectCount;
@@ -135,7 +141,6 @@ public class ManagerDao implements ManagerDaoInterface {
             }
           }
         }
-
       } else {
         con.rollback();
         throw new WrongProjectDateException("Project date should be at least 2 days later");
@@ -228,12 +233,38 @@ public class ManagerDao implements ManagerDaoInterface {
 
   @Override
   public void acceptOrRejectBug(Bug bug, boolean accepted) {
-    if (accepted) {
-      String acceptBugQuery = "UPDATE bugs WHERE bug_id=" + bug.getBugId() + " SET accepted=true";
+    Connection con = null;
+    try {
+      con = JdbcConnector.getInstance().getConnectionObject();
+      con.setAutoCommit(false);
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
 
-    } else {
-      String rejectBugQuery = "UPDATE bugs WHERE bug_id=" + bug.getBugId() + " SET accepted=false";
+    try {
+      String updateBugAcceptedStatusQuery = "UPDATE bugs SET accepted = " + (accepted ? "true" : "false")
+          + " WHERE bug_id = " + bug.getBugId();
+      try (PreparedStatement updateBugPS = con.prepareStatement(updateBugAcceptedStatusQuery);) {
+        updateBugPS.executeUpdate();
+        con.commit();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      } finally {
+        try {
+          con.setAutoCommit(true);
+          con.close();
+        } catch (SQLException e) {
+          throw new RuntimeException(e);
+        }
+      }
 
+    } finally {
+      try {
+        con.setAutoCommit(true);
+        con.close();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 

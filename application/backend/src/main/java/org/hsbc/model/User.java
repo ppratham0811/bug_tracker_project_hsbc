@@ -5,90 +5,109 @@ import org.hsbc.model.enums.UserRole;
 import java.time.LocalDate;
 
 public class User {
-//    username VARCHAR(100) NOT NULL,
-//    full_name VARCHAR(100),
-//    user_password VARCHAR(100) NOT NULL,
-//    user_email VARCHAR(100),
-//    user_role ENUM('manager', 'developer', 'tester') NOT NULL,
-//    project_count INT,
-//    last_logged_in DATETIME
+  // username VARCHAR(100) NOT NULL,
+  // full_name VARCHAR(100),
+  // user_password VARCHAR(100) NOT NULL,
+  // user_email VARCHAR(100),
+  // user_role ENUM('manager', 'developer', 'tester') NOT NULL,
+  // project_count INT,
+  // last_logged_in DATETIME
 
-    private String username, fullName, userPassword, userEmail;
-    private UserRole userRole;
-    private int projectCount, userId;
-    private LocalDate lastLoggedIn;
-    private static int firstUserId = 100000;
+  private String username, fullName, userPassword, userEmail;
+  private UserRole userRole;
+  private int projectCount, userId;
+  private LocalDate lastLoggedIn;
+  private static int firstUserId = 100000;
 
-    public User () {
-        userId = ++firstUserId;
-    }
+  public User() {
+    // when a blank object is created using this constructor, set the values
+    // manually
+    // this is done to avoid userId increment
+  }
 
-    public User(String username, String fullName, String userPassword, String userEmail, UserRole userRole) {
-        this.username = username;
-        this.fullName = fullName;
-        this.userPassword = userPassword;
-        this.userEmail = userEmail;
-        this.userRole = userRole;
-        userId = ++firstUserId;
-    }
+  public User(String username, String fullName, String userEmail, UserRole userRole) {
+    this.username = username;
+    this.fullName = fullName;
+    this.userEmail = userEmail;
+    this.userRole = userRole;
+    userId = ++firstUserId;
+  }
 
-    public int getUserId() {
-        return userId;
-    }
+  public User(String username, String fullName, String userPassword, String userEmail, UserRole userRole) {
+    this.username = username;
+    this.fullName = fullName;
+    this.userPassword = userPassword;
+    this.userEmail = userEmail;
+    this.userRole = userRole;
+    userId = ++firstUserId;
+  }
 
-    public String getUsername() {
-        return username;
-    }
+  @Override
+  protected void finalize() {
+    userId = --firstUserId;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public int getUserId() {
+    return userId;
+  }
 
-    public String getFullName() {
-        return fullName;
-    }
+  public void setUserId(int i) {
+    userId = i;
+  }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public String getUserPassword() {
-        return userPassword;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
+  public String getFullName() {
+    return fullName;
+  }
 
-    public String getUserEmail() {
-        return userEmail;
-    }
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
+  public String getUserPassword() {
+    return userPassword;
+  }
 
-    public UserRole getUserRole() {
-        return userRole;
-    }
+  public void setUserPassword(String userPassword) {
+    this.userPassword = userPassword;
+  }
 
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
-    }
+  public String getUserEmail() {
+    return userEmail;
+  }
 
-    public int getProjectCount() {
-        return projectCount;
-    }
+  public void setUserEmail(String userEmail) {
+    this.userEmail = userEmail;
+  }
 
-    public void setProjectCount(int projectCount) {
-        this.projectCount = projectCount;
-    }
+  public UserRole getUserRole() {
+    return userRole;
+  }
 
-    public LocalDate getLastLoggedIn() {
-        return lastLoggedIn;
-    }
+  public void setUserRole(UserRole userRole) {
+    this.userRole = userRole;
+  }
 
-    public void setLastLoggedIn(LocalDate lastLoggedIn) {
-        this.lastLoggedIn = lastLoggedIn;
-    }
+  public int getProjectCount() {
+    return projectCount;
+  }
+
+  public void setProjectCount(int projectCount) {
+    this.projectCount = projectCount;
+  }
+
+  public LocalDate getLastLoggedIn() {
+    return lastLoggedIn;
+  }
+
+  public void setLastLoggedIn(LocalDate lastLoggedIn) {
+    this.lastLoggedIn = lastLoggedIn;
+  }
 }

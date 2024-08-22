@@ -14,7 +14,9 @@ public class Project {
   private static int firstProjectId = 100;
 
   public Project() {
-    projectId = ++firstProjectId;
+    // when a blank object is created using this constructor, set the values
+    // manually
+    // this is done to avoid userId increment
   }
 
   public Project(String projectName, int projectManager, LocalDate startDate) {
@@ -22,6 +24,11 @@ public class Project {
     this.projectManager = projectManager;
     this.startDate = startDate;
     projectId = ++firstProjectId;
+  }
+
+  @Override
+  protected void finalize() throws Throwable {
+    projectId = --firstProjectId;
   }
 
   public void setProjectId(int projectId) {

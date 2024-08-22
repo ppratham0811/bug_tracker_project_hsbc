@@ -25,7 +25,9 @@ public class Bug {
   private static int firstBugId = 1000;
 
   public Bug() {
-    bugId = ++firstBugId;
+    // when a blank object is created using this constructor, set the values
+    // manually
+    // this is done to avoid userId increment
   }
 
   public Bug(String bugName, int createdBy, LocalDateTime createdOn, SeverityLevel severityLevel, int projectId) {
@@ -35,6 +37,11 @@ public class Bug {
     this.severityLevel = severityLevel;
     this.projectId = projectId;
     bugId = ++firstBugId;
+  }
+
+  @Override
+  protected void finalize() throws Throwable {
+    bugId = --firstBugId;
   }
 
   public int getBugId() {
