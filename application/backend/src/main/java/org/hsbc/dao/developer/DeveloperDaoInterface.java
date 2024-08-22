@@ -5,9 +5,11 @@ import org.hsbc.exceptions.NoBugsAssignedException;
 import org.hsbc.model.Bug;
 import org.hsbc.model.User;
 
+import java.util.List;
+
 public interface DeveloperDaoInterface {
 
   void changeBugStatusToMarked(Bug bug) throws BugNotAcceptedException;
 
-  public void readAssignedBugs(User user) throws NoBugsAssignedException; // assigned to a user
+  public List<Bug> readAssignedBugs(User user) throws NoBugsAssignedException; // assigned to a user
 }
