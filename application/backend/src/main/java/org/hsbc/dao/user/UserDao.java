@@ -240,6 +240,7 @@ public class UserDao implements UserDaoInterface {
                 String userRole = rs.getString("user_role");
                 int projectCount = rs.getInt("project_count");
 
+                user.setUserId(userId);
                 user.setUsername(username);
                 user.setFullName(fullName);
                 user.setUserEmail(email);

@@ -2,7 +2,6 @@ package org.hsbc.service.user;
 
 import org.hsbc.dao.user.UserDaoInterface;
 import org.hsbc.exceptions.*;
-import org.hsbc.model.Bug;
 import org.hsbc.model.Project;
 import org.hsbc.model.User;
 
@@ -23,7 +22,6 @@ public class UserService implements UserServiceInterface{
         }catch (IllegalArgumentException e){
             throw new DuplicateUserException(e.getMessage(),e);
         }
-
     }
 
     @Override

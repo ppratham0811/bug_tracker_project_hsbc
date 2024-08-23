@@ -29,22 +29,21 @@ public class DeveloperDao implements DeveloperDaoInterface {
                 Connection con = null;
                 try {
                     con = JdbcConnector.getInstance().getConnectionObject();
+                    con.setAutoCommit(false);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
 
                 try (PreparedStatement insertPS = con.prepareStatement(bugStatusQuery)) {
-
                     ResultSet rs = insertPS.executeQuery();
                     rs.close();
+                    con.commit();
                 } catch (SQLException se) {
                     try {
                         con.rollback();
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
-                    System.out.println(se.getMessage());
-
                 } finally {
                     try {
                         con.setAutoCommit(true);
@@ -57,15 +56,16 @@ public class DeveloperDao implements DeveloperDaoInterface {
         } else {
             throw new BugNotAcceptedException();
         }
-        return true;
+        return false;
     }
 
     @Override
     public List<Bug> readAssignedBugs(User user) throws NoBugsAssignedException {
-        String bugsQuery = "SELECT b.bug_id, b.bug_title, b.bug_description, b.bug_status, b.created_by, b.created_at, b.severity_level, b.project_id"
-                +
-                "FROM bugs b JOIN users u ON b.assigned_to = u.user_id" +
-                "WHERE u.user_id = " + user.getUserId();
+//        String bugsQuery = "SELECT b.bug_id, b.bug_title, b.bug_description, b.bug_status, b.created_by, b.created_at, b.severity_level, b.project_id"
+//                +
+//                "FROM bugs b JOIN users u ON b.assigned_to = u.user_id" +
+//                "WHERE u.user_id = " + user.getUserId();
+        String bugsQuery = "SELECT * FROM user u INNER JOIN user_bugs ub ON u.user_id = ub.user_id INNER JOIN bugs b ON ub.bug_id = b.bug_id WHERE u.user_id = " + user.getUserId();
         Connection con = null;
         List<Bug> allAssignedBugs = new ArrayList<>();
         Bug bug = new Bug();
@@ -74,6 +74,7 @@ public class DeveloperDao implements DeveloperDaoInterface {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
         try (PreparedStatement selectPS = con.prepareStatement(bugsQuery);
              ResultSet rs = selectPS.executeQuery()) {
             if (rs == null) {
@@ -81,7 +82,7 @@ public class DeveloperDao implements DeveloperDaoInterface {
             }
             while (rs.next()) {
                 int bugId = rs.getInt("bug_id");
-                String bugName = rs.getString("bug_title");
+                String bugName = rs.getString("bug_name");
                 String bugDes = rs.getString("bug_description");
                 String bugStatus = rs.getString("bug_status");
                 int createdBy = rs.getInt("created_by");

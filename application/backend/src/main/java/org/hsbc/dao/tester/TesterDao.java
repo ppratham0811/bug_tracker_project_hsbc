@@ -2,14 +2,16 @@ package org.hsbc.dao.tester;
 
 import org.hsbc.db.JdbcConnector;
 import org.hsbc.exceptions.BugsNotFoundException;
-import org.hsbc.exceptions.NoBugsAssignedException;
+import org.hsbc.exceptions.NotAuthorizedException;
 import org.hsbc.exceptions.UserNotFoundException;
 import org.hsbc.model.Bug;
 import org.hsbc.model.Project;
 import org.hsbc.model.User;
 import org.hsbc.model.enums.BugStatus;
 import org.hsbc.model.enums.SeverityLevel;
+import org.hsbc.model.enums.UserRole;
 
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,13 +21,9 @@ import java.util.List;
 
 public class TesterDao implements TesterDaoInterface {
     @Override
-    public boolean reportNewBug(Bug bug, Project project) {
-        String insertBugQuery = "INSERT INTO bugs (bug_name, bug_description, created_by, created_on, severity_level, bug_status, project_id) VALUES (?,?,?,?,?,?,?)";
-        // bug status and project id
-        String addBugQuery = "UPDATE projects SET bug_count = ? WHERE user_id = ? and project_id = ?";
-        // UPDATE users SET = ? WHERE user_id = ?
-        String getTesterQuery = "SELECT * FROM users WHERE user_id = ?";
+    public boolean reportNewBug(int userId, Bug bug, Project project) throws UserNotFoundException, NotAuthorizedException {
         Connection con = null;
+        boolean isTester = false;
 
         try {
             con = JdbcConnector.getInstance().getConnectionObject();
@@ -34,38 +32,67 @@ public class TesterDao implements TesterDaoInterface {
             throw new RuntimeException(e);
         }
 
-        try (PreparedStatement insertPS = con.prepareStatement(insertBugQuery);
-             PreparedStatement selectPS = con.prepareStatement(getTesterQuery);
-             PreparedStatement updateBugPS = con.prepareStatement(addBugQuery)) {
-            insertPS.setString(1, bug.getBugName());
-            insertPS.setString(2, bug.getBugDescription());
-            insertPS.setInt(3, bug.getCreatedBy());
-            insertPS.setTimestamp(4, Timestamp.valueOf(bug.getCreatedOn()));
-            insertPS.setString(5, String.valueOf(bug.getSeverityLevel()));
-            insertPS.setString(6, String.valueOf(bug.getBugStatus()));
-            insertPS.setInt(7, bug.getProjectId());
-            insertPS.executeUpdate();
-
-            selectPS.setInt(1, bug.getCreatedBy());
-            selectPS.executeQuery();
-
-            updateBugPS.setInt(1, project.getNoOfBugs() + 1); // but the bugcount will be in project model
-            updateBugPS.setInt(2, bug.getCreatedBy());
-            updateBugPS.setInt(3, bug.getProjectId());
-            updateBugPS.executeUpdate();
-
-            con.commit();
+        String getUser = "SELECT user_role FROM users WHERE user_id = " + userId;
+        try (PreparedStatement getUserPS = con.prepareStatement(getUser);
+        ResultSet userRS = getUserPS.executeQuery();) {
+            if (userRS == null) {
+                throw new UserNotFoundException("User not found");
+            }
+            String userRole = userRS.getString("user_role");
+            if (UserRole.valueOf(userRole.toUpperCase()) == UserRole.TESTER) {
+                isTester = true;
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            try {
-                con.setAutoCommit(true);
-                con.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
         }
-        return true;
+
+        if (isTester) {
+            String insertBugQuery = "INSERT INTO bugs (bug_name, bug_description, created_by, created_on, severity_level, bug_status, project_id) VALUES (?,?,?,?,?,?,?)";
+            // bug status and project id
+            String addBugQuery = "UPDATE projects SET bug_count = ? WHERE user_id = ? and project_id = ?";
+            // UPDATE users SET = ? WHERE user_id = ?
+            String getTesterQuery = "SELECT * FROM users WHERE user_id = ?";
+
+            try (PreparedStatement insertPS = con.prepareStatement(insertBugQuery);
+                 PreparedStatement selectPS = con.prepareStatement(getTesterQuery);
+                 PreparedStatement updateBugPS = con.prepareStatement(addBugQuery)) {
+                insertPS.setString(1, bug.getBugName());
+                insertPS.setString(2, bug.getBugDescription());
+                insertPS.setInt(3, bug.getCreatedBy());
+                insertPS.setTimestamp(4, Timestamp.valueOf(bug.getCreatedOn()));
+                insertPS.setString(5, String.valueOf(bug.getSeverityLevel()));
+                insertPS.setString(6, String.valueOf(bug.getBugStatus()));
+                insertPS.setInt(7, bug.getProjectId());
+                insertPS.executeUpdate();
+
+                selectPS.setInt(1, bug.getCreatedBy());
+                selectPS.executeQuery();
+
+                updateBugPS.setInt(1, project.getNoOfBugs() + 1);
+                updateBugPS.setInt(2, bug.getCreatedBy());
+                updateBugPS.setInt(3, bug.getProjectId());
+                updateBugPS.executeUpdate();
+
+                con.commit();
+                return true;
+            } catch (SQLException e) {
+                try {
+                    con.rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } finally {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } else {
+            throw new NotAuthorizedException("Only Tester can raise bugs");
+        }
+        return false;
     }
 
     // @Override
@@ -113,50 +140,36 @@ public class TesterDao implements TesterDaoInterface {
     // }
 
     @Override
-    public Collection<Bug> viewOwnBugs(User currentUser, Project project) throws BugsNotFoundException, UserNotFoundException {
-        // String getUserQuery = "SELECT * FROM users WHERE user_id = ?";
-        String getUserQuery = "SELECT * FROM users WHERE username = ?";
+    public Collection<Bug> viewOwnBugs(User currentUser, Project project) throws BugsNotFoundException {
         List<Bug> allTesterBugs = new ArrayList<>();
-        String getOwnBugsQuery = "SELECT * FROM bugs WHERE created_by = ? AND project_id = ?";
+        String getOwnBugsQuery = "SELECT * FROM bugs WHERE created_by = " + currentUser.getUserId() + " AND project_id = " + project.getProjectId();
 
         Connection con = null;
         Bug bug = new Bug();
-        Collection<Bug> bugList =null;
+        List<Bug> bugList = new ArrayList<>();
         try {
             con = JdbcConnector.getInstance().getConnectionObject();
-            con.setAutoCommit(false);
         } catch (SQLException se) {
             se.printStackTrace();
         }
 
-        try (PreparedStatement userQueryPS = con.prepareStatement(getUserQuery);
-             PreparedStatement bugQueryPS = con.prepareStatement(getOwnBugsQuery)) {
-            userQueryPS.setString(1, currentUser.getUsername());
-            ResultSet userRetrieved = userQueryPS.executeQuery();
-            int userId = 0;
-            if (userRetrieved.next()) {
-                userId = userRetrieved.getInt("user_id");
-            }else{
-                throw new UserNotFoundException("User Not Found");
-            }
+        try (PreparedStatement bugQueryPS = con.prepareStatement(getOwnBugsQuery);
+             ResultSet bugRS = bugQueryPS.executeQuery();) {
 
-            bugQueryPS.setInt(1, userId);
-            bugQueryPS.setInt(2, userId);
-            ResultSet rs = bugQueryPS.executeQuery();
-            if (rs == null) {
+            if (bugRS == null) {
                 throw new BugsNotFoundException("Bug not found");
             }
-            while (rs.next()){
-                int bugId = rs.getInt("bug_id");
-                String bugName = rs.getString("bug_name");
-                String bugDescription = rs.getString("bug_description");
-                int createdBy = rs.getInt("created_by");
-                LocalDateTime createdOn = rs.getTimestamp("created_on").toLocalDateTime();
-                SeverityLevel severityLevel = SeverityLevel.valueOf(rs.getString("severity_level"));
-                BugStatus bugStatus = BugStatus.valueOf(rs.getString("bug_status"));
-                Boolean accepted = rs.getBoolean("accepted");
-                int projectId = rs.getInt("project_id");
 
+            while (bugRS.next()) {
+                int bugId = bugRS.getInt("bug_id");
+                String bugName = bugRS.getString("bug_name");
+                String bugDescription = bugRS.getString("bug_description");
+                int createdBy = bugRS.getInt("created_by");
+                LocalDateTime createdOn = bugRS.getTimestamp("created_on").toLocalDateTime();
+                SeverityLevel severityLevel = SeverityLevel.valueOf(bugRS.getString("severity_level"));
+                BugStatus bugStatus = BugStatus.valueOf(bugRS.getString("bug_status"));
+                Boolean accepted = bugRS.getBoolean("accepted");
+                int projectId = bugRS.getInt("project_id");
 
                 bug.setBugId(bugId);
                 bug.setBugName(bugName);
