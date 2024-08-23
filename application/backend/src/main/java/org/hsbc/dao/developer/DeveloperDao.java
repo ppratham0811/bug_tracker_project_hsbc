@@ -18,11 +18,10 @@ import java.util.List;
 
 public class DeveloperDao implements DeveloperDaoInterface {
     @Override
-    public void changeBugStatusToMarked(Bug bug) throws BugNotAcceptedException {
+    public Boolean changeBugStatusToMarked(Bug bug) throws BugNotAcceptedException {
         if (bug.isAccepted()) {
             if (bug.getBugStatus() == BugStatus.COMPLETED) {
                 System.out.println("bug " + bug.getBugName() + " is already closed");
-                return;
             }
             if (bug.getBugStatus() == BugStatus.IN_PROGRESS) {
                 bug.setBugStatus(BugStatus.MARKED);
@@ -58,6 +57,7 @@ public class DeveloperDao implements DeveloperDaoInterface {
         } else {
             throw new BugNotAcceptedException();
         }
+        return true;
     }
 
     @Override

@@ -97,7 +97,7 @@ public class ManagerDao implements ManagerDaoInterface {
     }
 
     @Override
-    public void createNewProject(Project project) throws ProjectLimitExceededException, WrongProjectDateException {
+    public boolean createNewProject(Project project) throws ProjectLimitExceededException, WrongProjectDateException {
         String insertProjectQuery = "INSERT INTO projects (project_name, project_manager, start_date, project_status) VALUES (?,?,?,?)";
         String getProjectManagerQuery = "SELECT * FROM users WHERE user_id = ?";
         String addProjectQuery = "UPDATE users SET project_count = ? WHERE user_id = ?";
@@ -160,10 +160,11 @@ public class ManagerDao implements ManagerDaoInterface {
                 throw new RuntimeException(e);
             }
         }
+        return true;
     }
 
     @Override
-    public void assignProject(Project project, User user) throws ProjectLimitExceededException {
+    public boolean assignProject(Project project, User user) throws ProjectLimitExceededException {
         Connection con = null;
         try {
             con = JdbcConnector.getInstance().getConnectionObject();
@@ -203,10 +204,11 @@ public class ManagerDao implements ManagerDaoInterface {
                 se.printStackTrace();
             }
         }
+        return true;
     }
 
     @Override
-    public void assignBugToDeveloper(Bug bug, User user) {
+    public boolean assignBugToDeveloper(Bug bug, User user) {
         String assignQuery = "INSERT INTO user_bugs(user_id, bug_id) VALUES (" + user.getUserId() + ", " + bug.getBugId()
                 + ")";
         Connection con = null;
@@ -229,10 +231,11 @@ public class ManagerDao implements ManagerDaoInterface {
                 se.printStackTrace();
             }
         }
+        return true;
     }
 
     @Override
-    public void acceptOrRejectBug(Bug bug, boolean accepted) {
+    public boolean acceptOrRejectBug(Bug bug, boolean accepted) {
         Connection con = null;
         try {
             con = JdbcConnector.getInstance().getConnectionObject();
@@ -266,10 +269,11 @@ public class ManagerDao implements ManagerDaoInterface {
                 throw new RuntimeException(e);
             }
         }
+        return true;
     }
 
     @Override
-    public void closeBug(Bug bug) {
+    public boolean closeBug(Bug bug) {
         Connection con = null;
         try {
             con = JdbcConnector.getInstance().getConnectionObject();
@@ -290,5 +294,6 @@ public class ManagerDao implements ManagerDaoInterface {
                 throw new RuntimeException(e);
             }
         }
+        return true;
     }
 }

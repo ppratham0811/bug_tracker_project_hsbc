@@ -59,7 +59,7 @@ public class UserDao implements UserDaoInterface {
     }
 
     @Override
-    public void registerUser(User user) throws DuplicateUserException {
+    public Boolean registerUser(User user) throws DuplicateUserException {
 
         String registerQuery = "INSERT INTO users (username, full_name, user_password, user_email, user_role) VALUES (?,?,?,?,?)";
 
@@ -110,6 +110,7 @@ public class UserDao implements UserDaoInterface {
                 throw new RuntimeException(e);
             }
         }
+        return true;
     }
 
     @Override
@@ -350,60 +351,60 @@ public class UserDao implements UserDaoInterface {
         }
     }
 
-    @Override
-    public Bug getBugDetails(int bugId) throws NoSuchBugException {
-        String bugDetailsQuery = "select * from bugs where bug_id = " + bugId;
-        Connection con = null;
-        Bug bug = new Bug();
-        try {
-            con = JdbcConnector.getInstance().getConnectionObject();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        try (PreparedStatement selectPS = con.prepareStatement(bugDetailsQuery);
-             ResultSet rs = selectPS.executeQuery()) {
-            if (rs == null) {
-                throw new NoSuchBugException("You Have No Bugs");
-            } else if (rs.next()) {
-                String bugName = rs.getString("bug_title");
-                String bugDes = rs.getString("bug_description");
-                String bugStatus = rs.getString("bug_status");
-                int createdBy = rs.getInt("created_by");
-                LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
-                String severityLevel = rs.getString("severity_level");
-                int projectId = rs.getInt("project_id");
-                boolean acceptStatus = rs.getBoolean("accepted");
-
-                bug.setBugName(bugName);
-                bug.setBugDescription(bugDes);
-                bug.setBugStatus(BugStatus.valueOf(bugStatus.toUpperCase()));
-                bug.setCreatedBy(createdBy);
-                bug.setCreatedOn(createdAt);
-                bug.setSeverityLevel(SeverityLevel.valueOf(severityLevel.toUpperCase()));
-                bug.setProjectId(projectId);
-                bug.setAccepted(acceptStatus);
-
-                // System.out.println("Bug Id : " + bugId);
-                // System.out.println("Bug Name : " + bugName);
-                // System.out.println("Id of Project Present In : " + projectId);
-                // System.out.println("Bug Description : " + bugDes);
-                // System.out.println("Bug Status : " + bugStatus);
-                // System.out.println("Security Level : " + severityLevel);
-                // System.out.println("User Id of Creator : " + createdBy);
-                // System.out.println("Created At : " + createdAt);
-                // System.out.println("Acceptance Status : " + acceptStatus);
-                return bug;
-            }
-        } catch (SQLException se) {
-            System.out.println(se.getMessage());
-            throw new RuntimeException(se);
-        } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return bug;
-    }
+//    @Override
+//    public Bug getBugDetails(int bugId) throws NoSuchBugException {
+//        String bugDetailsQuery = "select * from bugs where bug_id = " + bugId;
+//        Connection con = null;
+//        Bug bug = new Bug();
+//        try {
+//            con = JdbcConnector.getInstance().getConnectionObject();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//        try (PreparedStatement selectPS = con.prepareStatement(bugDetailsQuery);
+//             ResultSet rs = selectPS.executeQuery()) {
+//            if (rs == null) {
+//                throw new NoSuchBugException("You Have No Bugs");
+//            } else if (rs.next()) {
+//                String bugName = rs.getString("bug_name");
+//                String bugDes = rs.getString("bug_description");
+//                String bugStatus = rs.getString("bug_status");
+//                int createdBy = rs.getInt("created_by");
+//                LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+//                String severityLevel = rs.getString("severity_level");
+//                int projectId = rs.getInt("project_id");
+//                boolean acceptStatus = rs.getBoolean("accepted");
+//
+//                bug.setBugName(bugName);
+//                bug.setBugDescription(bugDes);
+//                bug.setBugStatus(BugStatus.valueOf(bugStatus.toUpperCase()));
+//                bug.setCreatedBy(createdBy);
+//                bug.setCreatedOn(createdAt);
+//                bug.setSeverityLevel(SeverityLevel.valueOf(severityLevel.toUpperCase()));
+//                bug.setProjectId(projectId);
+//                bug.setAccepted(acceptStatus);
+//
+//                // System.out.println("Bug Id : " + bugId);
+//                // System.out.println("Bug Name : " + bugName);
+//                // System.out.println("Id of Project Present In : " + projectId);
+//                // System.out.println("Bug Description : " + bugDes);
+//                // System.out.println("Bug Status : " + bugStatus);
+//                // System.out.println("Security Level : " + severityLevel);
+//                // System.out.println("User Id of Creator : " + createdBy);
+//                // System.out.println("Created At : " + createdAt);
+//                // System.out.println("Acceptance Status : " + acceptStatus);
+//                return bug;
+//            }
+//        } catch (SQLException se) {
+//            System.out.println(se.getMessage());
+//            throw new RuntimeException(se);
+//        } finally {
+//            try {
+//                con.close();
+//            } catch (SQLException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        return bug;
+//    }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface DeveloperDaoInterface {
 
-  void changeBugStatusToMarked(Bug bug) throws BugNotAcceptedException;
+  Boolean changeBugStatusToMarked(Bug bug) throws BugNotAcceptedException;
 
   public List<Bug> readAssignedBugs(User user) throws NoBugsAssignedException; // assigned to a user
 }

@@ -10,13 +10,13 @@ import org.hsbc.model.User;
 public interface ManagerDaoInterface {
   Project getProjectDetails(int projectId) throws ProjectNotFoundException;
 
-  void createNewProject(Project project) throws ProjectLimitExceededException, WrongProjectDateException;
+  boolean createNewProject(Project project) throws ProjectLimitExceededException, WrongProjectDateException;
 
-  void assignProject(Project project, User user) throws ProjectLimitExceededException;
+  boolean assignProject(Project project, User user) throws ProjectLimitExceededException;
 
-  void assignBugToDeveloper(Bug bug, User user);
+  boolean assignBugToDeveloper(Bug bug, User user);
 
-  void acceptOrRejectBug(Bug bug, boolean accepted);
+  boolean acceptOrRejectBug(Bug bug, boolean accepted);
 
-  void closeBug(Bug bug);
+  boolean closeBug(Bug bug);
 }

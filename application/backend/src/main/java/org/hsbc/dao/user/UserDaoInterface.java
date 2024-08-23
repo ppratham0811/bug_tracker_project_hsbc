@@ -19,7 +19,7 @@ import java.util.List;
 
 public interface UserDaoInterface {
 
-  void registerUser(User user) throws DuplicateUserException;
+  Boolean registerUser(User user) throws DuplicateUserException;
 
   User loginUser(String username, String password) throws UserNotFoundException;
 
@@ -31,5 +31,5 @@ public interface UserDaoInterface {
 
   // public void readProjectDetails(Project project) throws
   // ProjectNotFoundException;
-  Bug getBugDetails(int bugId) throws NoSuchBugException;
+//  Bug getBugDetails(int bugId) throws NoSuchBugException;
 }

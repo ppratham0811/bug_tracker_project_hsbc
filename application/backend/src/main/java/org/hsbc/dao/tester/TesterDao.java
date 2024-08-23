@@ -1,18 +1,25 @@
 package org.hsbc.dao.tester;
 
 import org.hsbc.db.JdbcConnector;
+import org.hsbc.exceptions.BugsNotFoundException;
+import org.hsbc.exceptions.NoBugsAssignedException;
+import org.hsbc.exceptions.UserNotFoundException;
 import org.hsbc.model.Bug;
 import org.hsbc.model.Project;
 import org.hsbc.model.User;
+import org.hsbc.model.enums.BugStatus;
+import org.hsbc.model.enums.SeverityLevel;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class TesterDao implements TesterDaoInterface {
     @Override
-    public void reportNewBug(Bug bug, Project project) {
+    public boolean reportNewBug(Bug bug, Project project) {
         String insertBugQuery = "INSERT INTO bugs (bug_name, bug_description, created_by, created_on, severity_level, bug_status, project_id) VALUES (?,?,?,?,?,?,?)";
         // bug status and project id
         String addBugQuery = "UPDATE projects SET bug_count = ? WHERE user_id = ? and project_id = ?";
@@ -58,6 +65,7 @@ public class TesterDao implements TesterDaoInterface {
                 throw new RuntimeException(e);
             }
         }
+        return true;
     }
 
     // @Override
@@ -105,14 +113,15 @@ public class TesterDao implements TesterDaoInterface {
     // }
 
     @Override
-    public Collection<Bug> viewOwnBugs(User currentUser, Project project) {
+    public Collection<Bug> viewOwnBugs(User currentUser, Project project) throws BugsNotFoundException, UserNotFoundException {
         // String getUserQuery = "SELECT * FROM users WHERE user_id = ?";
         String getUserQuery = "SELECT * FROM users WHERE username = ?";
         List<Bug> allTesterBugs = new ArrayList<>();
         String getOwnBugsQuery = "SELECT * FROM bugs WHERE created_by = ? AND project_id = ?";
 
         Connection con = null;
-
+        Bug bug = new Bug();
+        Collection<Bug> bugList =null;
         try {
             con = JdbcConnector.getInstance().getConnectionObject();
             con.setAutoCommit(false);
@@ -127,17 +136,42 @@ public class TesterDao implements TesterDaoInterface {
             int userId = 0;
             if (userRetrieved.next()) {
                 userId = userRetrieved.getInt("user_id");
+            }else{
+                throw new UserNotFoundException("User Not Found");
             }
 
             bugQueryPS.setInt(1, userId);
             bugQueryPS.setInt(2, userId);
             ResultSet rs = bugQueryPS.executeQuery();
-
-            while (rs.next()) {
-
+            if (rs == null) {
+                throw new BugsNotFoundException("Bug not found");
             }
+            while (rs.next()){
+                int bugId = rs.getInt("bug_id");
+                String bugName = rs.getString("bug_name");
+                String bugDescription = rs.getString("bug_description");
+                int createdBy = rs.getInt("created_by");
+                LocalDateTime createdOn = rs.getTimestamp("created_on").toLocalDateTime();
+                SeverityLevel severityLevel = SeverityLevel.valueOf(rs.getString("severity_level"));
+                BugStatus bugStatus = BugStatus.valueOf(rs.getString("bug_status"));
+                Boolean accepted = rs.getBoolean("accepted");
+                int projectId = rs.getInt("project_id");
 
-            con.commit();
+
+                bug.setBugId(bugId);
+                bug.setBugName(bugName);
+                bug.setBugDescription(bugDescription);
+                bug.setCreatedBy(createdBy);
+                bug.setCreatedOn(createdOn);
+                bug.setSeverityLevel(severityLevel);
+                bug.setBugStatus(bugStatus);
+                bug.setAccepted(accepted);
+                bug.setProjectId(projectId);
+
+                bugList.add(bug);
+            }
+            return bugList;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -148,7 +182,5 @@ public class TesterDao implements TesterDaoInterface {
                 throw new RuntimeException(e);
             }
         }
-
-        return List.of();
     }
 }
