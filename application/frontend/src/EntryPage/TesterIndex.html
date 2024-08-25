@@ -1,54 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tester Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styletester.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="../Home/index.html">STARBUGS</a>
-            <div class="d-flex">
-                <!-- <a href="index.html" class="btn btn-outline-light">Home</a> -->
-                <a href="../Home/index.html" class="btn btn-outline-light ms-2">Logout</a>
+
+<body class="bg-gray-50 flex flex-col items-center min-h-screen">
+    <nav class="bg-gray-900 text-white w-full p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="../Home/index.html" class="flex items-center space-x-2">
+                <img src="../assets/logo.svg" alt="StarBugs Logo"
+                    class="h-8 w-auto filter invert brightness-0 text-white" />
+                <span class="text-xl font-bold font-mono">STARBUGS</span>
+            </a>
+            <div class="space-x-4">
+                <a href="../Home/index.html" class="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2">Logout</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h2>Tester Dashboard</h2>
+    <div class="container mx-auto my-8 p-6 bg-white rounded-lg shadow-lg max-w-4xl">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Tester Dashboard</h2>
 
-       
-        <div class="mb-4">
+        <div class="mb-8 text-center">
             <p><strong>Username:</strong> <span id="username">Bob Johnson</span></p>
+            <p><strong>Role:</strong> Tester</p>
             <p><strong>Email:</strong> <span id="email">bob.johnson@example.com</span></p>
+            <p><strong>Last Logged In:</strong> August 25, 2024, 10:15 AM</p>
         </div>
 
-        <!-- Projects and Bugs -->
         <div id="projectSection">
-            <!-- If no projects -->
-            <p id="noProjectMessage" style="display: none;" class="text-muted">You are not assigned to any project.</p>
+            <p id="noProjectMessage" class="hidden text-center text-gray-500">You are not assigned to any project.</p>
 
-            <!-- If assigned to projects -->
-            <div id="projectList">
+            <div id="projectList" class="space-y-4">
                 <!-- Projects and Bugs will be populated here -->
             </div>
         </div>
 
-        <!-- Link to Report a New Bug -->
-        <div class="mt-4">
-            <a href="BugFunctions/ReportBug.html" class="btn btn-primary">Report a New Bug</a>
+        <div class="mt-8 text-center">
+            <a href="BugFunctions/ReportBug.html"
+                class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg shadow-lg hover:bg-blue-700 transition duration-150 ease-in-out">Report
+                a New Bug</a>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Sample data for tester's projects and bugs
-        // needs to be populated more
-        
         const testerData = {
             username: "Bob Johnson",
             email: "bob.johnson@example.com",
@@ -69,53 +68,47 @@
             ]
         };
 
-        // Populate the Tester Dashboard
         function populateTesterDashboard() {
             document.getElementById('username').textContent = testerData.username;
             document.getElementById('email').textContent = testerData.email;
 
-            const projectSection = document.getElementById('projectSection');
             const projectList = document.getElementById('projectList');
             const noProjectMessage = document.getElementById('noProjectMessage');
 
             if (testerData.projects.length === 0) {
-                noProjectMessage.style.display = 'block';
-                projectList.style.display = 'none';
+                noProjectMessage.classList.remove('hidden');
+                projectList.classList.add('hidden');
             } else {
-                noProjectMessage.style.display = 'none';
-                projectList.style.display = 'block';
+                noProjectMessage.classList.add('hidden');
+                projectList.classList.remove('hidden');
 
                 testerData.projects.forEach(project => {
                     const projectCard = document.createElement('div');
-                    projectCard.className = 'card mb-3';
-
-                    const projectCardBody = document.createElement('div');
-                    projectCardBody.className = 'card-body';
+                    projectCard.className = 'bg-white p-4 rounded-lg shadow-lg';
 
                     const projectTitle = document.createElement('h5');
-                    projectTitle.className = 'card-title';
+                    projectTitle.className = 'text-xl font-semibold mb-2';
                     projectTitle.textContent = project.name;
 
                     const bugList = document.createElement('ul');
-                    bugList.className = 'list-group list-group-flush';
+                    bugList.className = 'space-y-2';
 
                     project.bugs.forEach(bug => {
                         const bugItem = document.createElement('li');
-                        bugItem.className = 'list-group-item';
+                        bugItem.className = 'bg-gray-100 p-2 rounded-lg';
                         bugItem.textContent = `${bug.title} (Status: ${bug.status})`;
                         bugList.appendChild(bugItem);
                     });
 
-                    projectCardBody.appendChild(projectTitle);
-                    projectCardBody.appendChild(bugList);
-                    projectCard.appendChild(projectCardBody);
+                    projectCard.appendChild(projectTitle);
+                    projectCard.appendChild(bugList);
                     projectList.appendChild(projectCard);
                 });
             }
         }
 
-        //To be added in js
         populateTesterDashboard();
     </script>
 </body>
+
 </html>
