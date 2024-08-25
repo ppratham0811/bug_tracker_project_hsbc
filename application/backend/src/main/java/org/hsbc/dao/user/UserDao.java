@@ -25,17 +25,14 @@ import java.security.spec.InvalidKeySpecException;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 public class UserDao implements UserDaoInterface {
-    // variables required for password hashing (algorithm used: PKDF5)
-    private final int iterations = 100, keyLength = 512;
 
     // this method will return the hashed password as a bytes array
-    private byte[] hashPassword(final char[] password, final int iterations, final int keyLength) {
+    private byte[] hashPassword(final char[] password) {
         Properties props = new Properties();
         Path envFile = Paths.get(".env");
 
@@ -49,6 +46,9 @@ public class UserDao implements UserDaoInterface {
 
         try {
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+            // variables required for password hashing (algorithm used: PKDF5)
+            int iterations = 100;
+            int keyLength = 100;
             PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, keyLength);
             SecretKey key = skf.generateSecret(spec);
             byte[] res = key.getEncoded();
@@ -78,7 +78,7 @@ public class UserDao implements UserDaoInterface {
             // storing password hash in db
             char[] passwordChars = user.getUserPassword().toCharArray();
 
-            byte[] hashedBytes = hashPassword(passwordChars, iterations, keyLength);
+            byte[] hashedBytes = hashPassword(passwordChars);
             String hashedString = Hex.encodeHexString(hashedBytes);
             ps.setString(3, hashedString);
 
@@ -129,7 +129,7 @@ public class UserDao implements UserDaoInterface {
 
             char[] passwordChars = password.toCharArray();
 
-            byte[] hashedBytes = hashPassword(passwordChars, iterations, keyLength);
+            byte[] hashedBytes = hashPassword(passwordChars);
             String hashedString = Hex.encodeHexString(hashedBytes);
             ps.setString(2, hashedString);
 
