@@ -19,6 +19,10 @@ public class TesterService implements TesterServiceInterface{
         this.dao = dao;
     }
 
+    public TesterService() {
+
+    }
+
     @Override
     public boolean bugReport(int userId, Bug bug, Project project) throws UserNotFoundException, NotAuthorizedException {
         try {

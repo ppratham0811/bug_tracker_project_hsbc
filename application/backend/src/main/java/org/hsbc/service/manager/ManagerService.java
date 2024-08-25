@@ -16,6 +16,10 @@ public class ManagerService implements ManagerServiceInterface {
         this.dao = dao;
     }
 
+    public ManagerService() {
+
+    }
+
 //    @Override
 //    public Project viewProjectDetails(int projectId) throws ProjectNotFoundException {
 //        try {

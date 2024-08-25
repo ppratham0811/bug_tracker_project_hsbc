@@ -15,6 +15,10 @@ public class DeveloperService implements DeveloperServiceInterface{
         this.dao = dao;
     }
 
+    public DeveloperService() {
+
+    }
+
     @Override
     public Boolean bugStatusChange(Bug bug) throws BugNotAcceptedException {
         try {

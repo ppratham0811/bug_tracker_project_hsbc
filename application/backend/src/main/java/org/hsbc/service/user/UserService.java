@@ -14,6 +14,10 @@ public class UserService implements UserServiceInterface{
         this.dao = dao;
     }
 
+    public UserService() {
+
+    }
+
     @Override
     public boolean addUser(User user) throws DuplicateUserException {
         try {
