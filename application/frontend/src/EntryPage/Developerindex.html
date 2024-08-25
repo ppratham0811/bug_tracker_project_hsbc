@@ -1,62 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Developer Main Page</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles1.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/application/frontend/src/Home/index.html">Bug Tracker</a>
-            <div class="d-flex">
-                <a href="/application/frontend/src/Home/index.html" class="btn btn-outline-light">Logout</a>
+
+<body class="bg-gray-50 flex flex-col items-center min-h-screen">
+    <nav class="bg-gray-900 text-white w-full p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <img src="../assets/logo.svg" alt="StarBugs Logo"
+                    class="h-8 w-auto filter invert brightness-0 text-white" />
+                <span class="text-xl font-bold font-mono">STARBUGS</span>
+            </a>
+            <div class="space-x-4">
+                <a href="/application/frontend/src/Home/index.html"
+                    class="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2">Logout</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h2>Developer Dashboard</h2>
-        <div class="user-info mb-4">
-            <h4>Welcome, <span id="username">John</span></h4>
-            <p><strong>Role:</strong> <span id="role"></span>Tester</p>
-            <p><strong>Email:</strong> <span id="email">john@example.com</span></p>
-            <p><strong>Last Logged In:</strong> August 25, 2024, 10:15 AM</p>
+    <div class="container mx-auto my-8 p-6 bg-white rounded-lg shadow-lg max-w-4xl">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Developer Dashboard</h2>
+
+        <div class="user-info mb-8 text-center">
+            <h4 class="text-xl font-bold">Welcome, <span id="username">John</span></h4>
+            <p class="text-gray-700"><strong>Role:</strong> <span id="role">Tester</span></p>
+            <p class="text-gray-700"><strong>Email:</strong> <span id="email">john@example.com</span></p>
+            <p class="text-gray-700"><strong>Last Logged In:</strong> August 25, 2024, 10:15 AM</p>
         </div>
 
-        <div id="projectDetails" class="d-none">
-            <h3>Project Details</h3>
-            <div class="project-info bg-light p-3 mb-4">
-                <p><strong>Project Name:</strong> <span id="projectName">Project Alpha</span></p>
-                <p><strong>Manager:</strong> <span id="projectManager">Jane Smith</span></p>
-                <p><strong>Start Date:</strong> <span id="startDate">2024-08-01</span></p>
-                <p><strong>Team Members:</strong> <span id="teamMembers">John Doe, Alice Smith</span></p>
+        <div id="projectDetails" class="hidden">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Project Details</h3>
+            <div class="project-info bg-gray-100 p-4 rounded-lg mb-6">
+                <p class="text-gray-700"><strong>Project Name:</strong> <span id="projectName">Project Alpha</span></p>
+                <p class="text-gray-700"><strong>Manager:</strong> <span id="projectManager">Jane Smith</span></p>
+                <p class="text-gray-700"><strong>Start Date:</strong> <span id="startDate">2024-08-01</span></p>
+                <p class="text-gray-700"><strong>Team Members:</strong> <span id="teamMembers">John Doe, Alice Smith</span></p>
             </div>
 
-            <h4>Bugs</h4>
-            <div class="list-group">
+            <h4 class="text-lg font-medium text-gray-800 mb-4">Bugs</h4>
+            <div class="space-y-4">
                 <!-- Example Bug Item -->
-                <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="bg-white p-4 rounded-lg shadow flex justify-between items-center">
                     <div>
-                        <strong>Bug Title 1</strong>
-                        <p>Description of bug 1</p>
+                        <strong class="text-gray-900">Bug Title 1</strong>
+                        <p class="text-gray-600">Description of bug 1</p>
                     </div>
-                    <button class="btn btn-warning btn-sm" onclick="markAsClosed('Bug Title 1')">Mark as Closed</button>
+                    <button
+                        class="text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-4 py-2">
+                        Mark as Closed
+                    </button>
                 </div>
                 <!-- More bug items can be added here -->
             </div>
         </div>
 
-        <div id="noProjectMessage" class="alert alert-warning d-none">
+        <div id="noProjectMessage" class="hidden p-4 bg-yellow-100 text-yellow-800 rounded-lg">
             You are not assigned to any project.
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Sample data
         const isAssigned = true; // Change to false to test "not assigned" state
         const bugs = [
             { title: "Bug Title 1", description: "Description of bug 1" },
@@ -70,45 +78,45 @@
             const projectManager = document.getElementById('projectManager');
             const startDate = document.getElementById('startDate');
             const teamMembers = document.getElementById('teamMembers');
-            const bugList = document.querySelector('.list-group');
+            const bugList = document.querySelector('.space-y-4');
 
             if (isAssigned) {
-                projectDetails.classList.remove('d-none');
-                noProjectMessage.classList.add('d-none');
+                projectDetails.classList.remove('hidden');
+                noProjectMessage.classList.add('hidden');
 
-                // Populate project details (static example)
                 projectName.textContent = "Project Alpha";
                 projectManager.textContent = "Jane Smith";
                 startDate.textContent = "2024-08-01";
                 teamMembers.textContent = "John Doe, Alice Smith";
 
-                // Populate bugs
                 bugList.innerHTML = '';
                 bugs.forEach(bug => {
                     const bugItem = document.createElement('div');
-                    bugItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                    bugItem.className = 'bg-white p-4 rounded-lg shadow flex justify-between items-center';
                     bugItem.innerHTML = `
                         <div>
-                            <strong>${bug.title}</strong>
-                            <p>${bug.description}</p>
+                            <strong class="text-gray-900">${bug.title}</strong>
+                            <p class="text-gray-600">${bug.description}</p>
                         </div>
-                        <button class="btn btn-warning btn-sm" onclick="markAsClosed('${bug.title}')">Mark as Closed</button>
+                        <button
+                            class="text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-4 py-2">
+                            Mark as Closed
+                        </button>
                     `;
                     bugList.appendChild(bugItem);
                 });
             } else {
-                projectDetails.classList.add('d-none');
-                noProjectMessage.classList.remove('d-none');
+                projectDetails.classList.add('hidden');
+                noProjectMessage.classList.remove('hidden');
             }
         }
 
         function markAsClosed(bugTitle) {
             alert(`Bug "${bugTitle}" marked as closed.`);
-            // Additional logic for marking the bug as closed can be added here
         }
 
-        // Initialize page
         window.onload = renderPage;
     </script>
 </body>
+
 </html>
