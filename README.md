@@ -114,7 +114,7 @@ The `UserDao` class handles all database operations common to all types of users
   - **Parameters:** `int userId`
   - **Return Type:** `User`
   - **Exception Thrown:** `UserNotFoundException`
-  - **Description:** Fetches detailed information of a user based on the user ID. Returns the `User` object if found, otherwise throws a `UserNotFoundException`.
+  - **Description:** Fetches detailed information of the current logged user based on the user ID. Returns the `User` object if found, otherwise throws a `UserNotFoundException`.
 - **`getProjectMembers`**
   - **Parameters:** `Project` object
   - **Return Type:** `List<Integer>`
